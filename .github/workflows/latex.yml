@@ -1,0 +1,38 @@
+name: Build LaTeX example
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Compile paper-example.tex
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Compile with XeLaTeX
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: paper-example.tex
+          latexmk_use_xelatex: true
+
+      - name: Upload compiled PDF
+        uses: actions/upload-artifact@v7
+        with:
+          name: paper-example
+          path: paper-example.pdf
+          if-no-files-found: error
+          retention-days: 14

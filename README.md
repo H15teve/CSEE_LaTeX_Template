@@ -11,7 +11,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 **模板用途：本模板适合先用中文完成电气工程论文，再将内容迁移到 IEEE Transactions 等英文期刊模板。它不是《中国电机工程学报》官方发布的模板，也不能替代投稿前对期刊最新要求的核对。**
 
-当前测试版本：**v0.6.1-rc3**（Overleaf 免费版编译优化候选）。
+当前测试版本：**v0.6.1-rc4**（默认配置调整候选）。
 
 > **许可证：**本项目的原创模板实现采用 LaTeX Project Public License 1.3c 或更高版本发布，维护状态为 `maintained`。版权人及当前维护者为 Chen Jiaqi（GitHub: `@H15teve`）。准确的授权文件范围见 `LPPL-MANIFEST.txt`；第三方字体、期刊材料、示例图片及编译产物不因此获得授权。
 
@@ -44,17 +44,13 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 ### 跨平台字体方案
 
-字体配置参考 ThuThesis 的做法：模板将操作系统自带字体、可选的 Noto CJK 字体和 TeX Live 随附字体组织为若干方案。论文骨架默认使用面向 Overleaf 免费版的轻量配置：
-
-```tex
-\usepackage[fontset=overleaf,fastcompile]{csee}
-```
-
-`overleaf` 与 `fandol` 使用相同的中文和正文西文字体，但不重复注册论文模板未使用的专用西文等宽字体；`fastcompile` 还停止预加载论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell` 和 `siunitx`。需要其中某个宏包时，可在主文件中自行 `\usepackage`；需要自动适应本地操作系统并恢复全部预加载宏包时，可改用：
+字体配置参考 ThuThesis 的做法：模板将操作系统自带字体、可选的 Noto CJK 字体和 TeX Live 随附字体组织为若干方案。论文骨架默认使用自动探测方案：
 
 ```tex
 \usepackage[fontset=auto]{csee}
 ```
+
+`auto` 会按 `windows → mac → noto → fandol` 的顺序自动选择第一个可用的字体方案。在 Windows 上使用 SimSun/SimHei 等原 Word 字体，macOS 使用华文字体，Overleaf 免费版自动回退到 TeX Live 自带的 Fandol 字体。需要 `siunitx`、`multirow`、`tabularx`、`makecell` 或 `setspace` 时，模板已默认预加载，无需手动添加。
 
 | 方案 | 中文字体映射 | 西文字体映射 | 适用场景 |
 |---|---|---|---|
@@ -88,7 +84,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 2. 主文件选择 `paper-example.tex`，编译器选择 XeLaTeX，TeX Live 版本选择 2025。
 3. 保留根目录中的 `latexmkrc` 和 `paper-example-bbl.tex`；普通 `.tex` 文件不会被 Overleaf 的上传清理规则移除。若你把主文件重命名为 `output.tex` 或其他名称，配置和示例入口会自动使用备用参考文献数据。
 4. 在 Overleaf 免费版首次编译前，将 `latexmkrc` 中的 `$csee_run_biber = 1` 改为 `$csee_run_biber = 0`；付费版不需要修改。
-5. 保持论文骨架的 `fontset=overleaf,fastcompile`。如需 `siunitx`、`multirow`、`tabularx`、`makecell` 或 `setspace`，请在主文件中按需加载。如需 Windows 金样字体，应在本地改用 `fontset=windows` 完成最终检查。
+5. 保持论文骨架的 `fontset=auto`，无需修改。若编译时间仍接近 10 秒上限，可改为 `fontset=overleaf,fastcompile` 进一步优化（此时 `siunitx`、`multirow`、`tabularx`、`makecell` 和 `setspace` 不再预加载，需在正文中按需添加 `\usepackage`）。如需 Windows 金样字体，应在本地改用 `fontset=windows` 完成最终检查。
 
 `latexmkrc` 只忽略 `biblatex/logreq` 在排版已经稳定后对 `.run.xml` 中单个状态位的修改，避免一次无视觉变化的 XeLaTeX 重跑；`.aux`、`.bcf`、交叉引用以及其他 XML 内容仍会被检查。本配置不限制最大编译轮数，也不会把未稳定的构建伪装为成功。
 
@@ -226,7 +222,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.1-rc3 已完成 TeX Live 2025 干净项目计时、无 `.bbl` 的备用参考文献源回归、XeLaTeX + Biber 全流程编译、`fontset=overleaf` 字体复用回归，以及优化前后逐页像素对比。`golden-demo.tex` 继续使用 `fontset=windows`，不受 Overleaf 优化影响。该候选版本仍需在 Overleaf 免费版真实环境中确认首次编译时间。
+v0.6.1-rc4 已完成默认配置调整：`paper-example.tex` 默认使用 `fontset=auto`，不再默认启用 `fastcompile`。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。该候选版本需在 Overleaf 免费版真实环境中确认首次编译时间。
 
 ## 许可证
 

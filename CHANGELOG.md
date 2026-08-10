@@ -9,6 +9,14 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 本项目遵循语义化版本号。日期采用 `YYYY-MM-DD`。
 
+## v0.6.1-rc4 - 2026-08-11
+
+### 默认配置调整
+
+- `paper-example.tex` 默认值从 `fontset=overleaf,fastcompile` 改为 `fontset=auto`：本地 Windows/macOS 用户无需手动修改即可获得与操作系统匹配的字体；Overleaf 免费版自动回退到 Fandol，不影响编译。
+- 不再默认启用 `fastcompile`，`siunitx`、`multirow`、`tabularx`、`makecell`、`setspace` 恢复默认预加载，减少用户遇到 `Undefined control sequence` 的可能。
+- README 同步更新：Overleaf 免费版用户如需进一步优化，可按需手动改为 `fontset=overleaf,fastcompile`。
+
 ## v0.6.1-rc3 - 2026-08-10
 
 ### 编译模式默认值

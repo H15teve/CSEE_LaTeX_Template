@@ -10,9 +10,10 @@
 %  编译: build.cmd paper-example，或 xelatex → biber → xelatex ×2
 %==================================================================
 \documentclass[UTF8,twoside,a4paper,fontset=none]{ctexart}
-% overleaf: 锁定 TeX Live 自带字体并减少重复字体初始化，适合 10 s 免费版。
-% Windows 金样排版可改为 fontset=windows；通用自动探测可改为 fontset=auto。
-\usepackage[fontset=overleaf,fastcompile]{csee}
+% auto: 在 Windows 上自动使用 SimSun 等原 Word 字体，macOS 使用华文字体，
+% Overleaf 免费版自动回退到 TeX Live 自带的 Fandol 字体，10 秒限制内可正常编译。
+% Overleaf 免费版若需进一步优化编译时间，可改为 fontset=overleaf,fastcompile。
+\usepackage[fontset=auto]{csee}
 \usepackage[backend=biber,style=gb7714-2005,gbnamefmt=lowercase]{biblatex}
 \addbibresource{refs.bib}
 % Overleaf may remove uploaded .bbl files.  The ordinary .tex companion is

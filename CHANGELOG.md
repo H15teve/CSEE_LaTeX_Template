@@ -9,6 +9,18 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 本项目遵循语义化版本号。日期采用 `YYYY-MM-DD`。
 
+## v0.6.1-rc2 - 2026-08-10
+
+### Overleaf 参考文献修复
+
+- Overleaf 上传流程可能移除 `.bbl` 文件；新增普通 `.tex` 备用参考文献源 `paper-example-bbl.tex`，缺少作业 `.bbl` 时由 `biblatex` 在初始化后加载。
+- 主文件重命名为 `output.tex` 等名称时仍可显示参考文献，不再依赖上传 `.bbl` 是否被保留。
+- 测试包不以 `.bbl` 作为 Overleaf 预览的必要输入；GitHub Actions 仍使用 Biber 执行完整构建。
+
+### 性能验证
+
+- 完全移除 `.bbl` 后的 XeLaTeX 快速预览本地基准约 8.9 秒，包含引用和参考文献条目。
+
 ## v0.6.1-rc1 - 2026-08-10
 
 ### Overleaf 兼容性

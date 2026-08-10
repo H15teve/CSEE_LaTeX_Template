@@ -38,7 +38,9 @@ The following accompanying materials are not part of the LPPL Work:
   - images under figures/ unless a file carries its own license notice;
   - compiled preview PDFs, test baselines, OOXML extracts, and other generated
     or comparison artifacts;
-  - the generated paper-example.bbl file bundled for Overleaf Free preview.
+  - the generated paper-example.bbl file bundled for Overleaf Free preview;
+  - the generated paper-example-bbl.tex fallback data file bundled for
+    Overleaf Free preview.
 
 Only material for which the Copyright Holder owns the necessary rights is
 offered under LPPL 1.3c. See NOTICE.md for additional attribution and rights

@@ -15,6 +15,29 @@
 \usepackage[fontset=overleaf,fastcompile]{csee}
 \usepackage[backend=biber,style=gb7714-2005,gbnamefmt=lowercase]{biblatex}
 \addbibresource{refs.bib}
+% Overleaf may remove uploaded .bbl files.  The ordinary .tex companion is
+% retained and supplies the last known bibliography until Biber is run.
+\makeatletter
+\def\cseebblfallback{%
+  \begingroup
+  \blx@blxinit
+  \blx@secinit
+  \begingroup
+  \blx@bblstart
+  \input{paper-example-bbl.tex}%
+  \global\toggletrue{blx@bbldone}%
+  \blx@bblend
+  \endgroup
+  \csnumgdef{blx@labelnumber@\the\c@refsection}{0}%
+  \endgroup
+}
+\makeatother
+\IfFileExists{\jobname.bbl}{}{%
+  \IfFileExists{paper-example-bbl.tex}{%
+    \AddToHook{begindocument}[csee-bbl-fallback]{\cseebblfallback}%
+    \DeclareHookRule{begindocument}{csee-bbl-fallback}{after}{biblatex}%
+  }{}%
+}
 \graphicspath{{figures/}}
 
 \cseeheader{中国电机工程学报}{Proceedings of the CSEE}

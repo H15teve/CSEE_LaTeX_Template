@@ -136,9 +136,7 @@
   \setsansfont{texgyreheros}[
     Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
     ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
-  \newfontfamily\cseetnr{texgyretermes}[
-    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
-    ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
+  \newcommand{\cseetnr}{\rmfamily}%
 }
 \newcommand{\csee@set@latin@texgyre}{%
   \csee@set@latin@texgyre@base
@@ -196,12 +194,9 @@
   \setCJKsansfont{FandolHei}[
     Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
   \setCJKmonofont{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
-  \newCJKfontfamily\songti{FandolSong}[
-    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
-  \newCJKfontfamily\cseesongbold{FandolSong}[
-    Extension=.otf,UprightFont=*-Bold]%
-  \newCJKfontfamily\heiti{FandolHei}[
-    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
+  \newcommand{\songti}{\CJKfamily{\CJKrmdefault}}%
+  \newcommand{\cseesongbold}{\CJKfamily{\CJKrmdefault}\bfseries}%
+  \newcommand{\heiti}{\CJKfamily{\CJKsfdefault}}%
   \newCJKfontfamily\fangsong{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
   \newCJKfontfamily\kaishu{FandolKai}[Extension=.otf,UprightFont=*-Regular]%
   \newfontfamily\cseekailatin{FandolKai-Regular.otf}%

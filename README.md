@@ -85,12 +85,12 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 1. 将发布包内容直接放在 Overleaf 项目根目录，不要再套一层文件夹。
 2. 主文件选择 `paper-example.tex`，编译器选择 XeLaTeX，TeX Live 版本选择 2025。
-3. 保留根目录中的 `latexmkrc` 和 `paper-example.bbl`；Overleaf 会自动读取配置并复用已生成的参考文献。
+3. 保留根目录中的 `latexmkrc` 和 `paper-example.bbl`；Overleaf 会自动读取配置并复用已生成的参考文献。若你把主文件重命名为 `output.tex` 或其他名称，配置会在首次编译前自动建立对应的 `.bbl` 别名。
 4. 保持论文骨架的 `fontset=overleaf,fastcompile`。如需 `siunitx`、`multirow`、`tabularx`、`makecell` 或 `setspace`，请在主文件中按需加载。如需 Windows 金样字体，应在本地改用 `fontset=windows` 完成最终检查。
 
 `latexmkrc` 只忽略 `biblatex/logreq` 在排版已经稳定后对 `.run.xml` 中单个状态位的修改，避免一次无视觉变化的 XeLaTeX 重跑；`.aux`、`.bcf`、交叉引用以及其他 XML 内容仍会被检查。本配置不限制最大编译轮数，也不会把未稳定的构建伪装为成功。
 
-为避开免费版首次启动 Biber 的时间开销，`latexmkrc` 默认令 `$csee_run_biber = 0` 并读取随包提供的 `paper-example.bbl`。修改正文、公式、图表和已有引用不需要改变该值。修改 `refs.bib` 或新增引用后，可临时将其改成 `1` 编译一次；成功刷新参考文献后再改回 `0`。也可以在本地运行 `build.cmd paper-example`，或交由 GitHub Actions 使用 `CSEE_RUN_BIBER=1` 完成最终构建。
+为避开免费版首次启动 Biber 的时间开销，`latexmkrc` 默认令 `$csee_run_biber = 0` 并读取随包提供的 `paper-example.bbl`。修改正文、公式、图表和已有引用不需要改变该值。修改 `refs.bib` 或新增引用后，可临时将其改成 `1` 编译一次；成功刷新参考文献后再改回 `0`。也可以在本地运行 `build.cmd paper-example`，或交由 GitHub Actions 使用 `CSEE_RUN_BIBER=1` 完成最终构建。若主文件不是 `paper-example.tex`，配置会从 latexmk 的主文件参数识别名称并复制 `paper-example.bbl` 为对应的作业名；已有同名 `.bbl` 文件不会被覆盖。
 
 本地 TeX Live 2025 的免费版预览模式干净项目基准约为 8–9 秒；启用 Biber 的最终模式约为 10–11 秒。实际云端时间取决于 Overleaf 当时的执行节点；若首次编译仍超时，请保留生成文件并再次点击 Recompile，不要立即选择 Recompile from scratch。
 
@@ -224,7 +224,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.1-rc1 已完成 TeX Live 2025 干净项目计时、XeLaTeX + Biber 全流程编译、`fontset=overleaf` 字体复用回归，以及优化前后逐页像素对比。`golden-demo.tex` 继续使用 `fontset=windows`，不受 Overleaf 优化影响。该候选版本仍需在 Overleaf 免费版真实环境中确认首次编译时间。
+v0.6.1-rc1 已完成 TeX Live 2025 干净项目计时、XeLaTeX + Biber 全流程编译、`fontset=overleaf` 字体复用回归、主文件重命名后的 `.bbl` 别名回归，以及优化前后逐页像素对比。`golden-demo.tex` 继续使用 `fontset=windows`，不受 Overleaf 优化影响。该候选版本仍需在 Overleaf 免费版真实环境中确认首次编译时间。
 
 ## 许可证
 

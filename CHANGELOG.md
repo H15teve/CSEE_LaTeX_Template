@@ -19,6 +19,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 - 复用已经注册的正文、无衬线和中文粗体字体族，避免同一字体在每轮 XeLaTeX 中重复初始化；示例优化前后逐页像素一致。
 - 新增项目级 `latexmkrc`，精确忽略 `biblatex/logreq` 的非排版状态位变化，省去一次无视觉差异的最终 XeLaTeX 重跑，同时继续检查参考文献、交叉引用和其他辅助文件。
 - 随包提供与示例数据同步的 `paper-example.bbl`；Overleaf 免费版默认复用该文件并跳过 Biber，修改参考文献时可通过 `$csee_run_biber` 临时刷新。
+- 若 Overleaf 将主文件命名为 `output.tex` 等其他名称，`latexmkrc` 会自动建立对应的 `.bbl` 别名，避免“编译通过但参考文献为空”。
 - GitHub Actions 通过 `CSEE_RUN_BIBER=1` 始终执行完整参考文献构建，不以快速预览代替最终验证。
 - GitHub Actions 固定使用 TeX Live 2025，以贴近 Overleaf 免费版环境。
 

@@ -21,6 +21,8 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 |---|---|
 | `csee.sty` | 模板核心样式包 |
 | `paper-example.tex` | 推荐复制并改写的论文骨架 |
+| `paper-example-bbl.tex` | 预编译参考文献备用源（Overleaf 免费版无需运行 Biber） |
+| `latexmkrc` | latexmk 编译轮次优化配置 |
 | `refs.bib` | GB/T 7714 参考文献示例数据 |
 | `golden-demo.tex` | 与 Word 模板逐页对照的排版样张源码 |
 | `figures/` | 示例图、作者照片及金样所需素材 |
@@ -81,13 +83,18 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 ### Overleaf 免费版（10 秒编译限制）
 
-Overleaf 免费版因服务器缺少 Windows/macOS 字体，`fontset=auto` 的字体探测过程会显著增加编译时间；此外模板默认预加载的若干宏包和等宽西文字体注册在示例论文中并未使用。请在 `paper-example.tex` 中手动指定：
+Overleaf 免费版因服务器缺少 Windows/macOS 字体、`fontset=auto` 的字体探测耗时显著，且 10 秒内难以完成 Biber 参考文献构建。`paper-example.tex` 已默认采用以下组合适应这一限制：
 
 ```tex
 \usepackage[fontset=overleaf,fastcompile]{csee}
 ```
 
-`overleaf` 直接使用 TeX Live 自带的 Fandol/TeX Gyre 字体且不注册示例未使用的等宽字体；`fastcompile` 跳过 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个宏包的预加载。二者配合可将首次编译控制在 10 秒以内。如需其中某个宏包，可在主文件中自行 `\usepackage`。本地 Windows 用户应恢复为 `fontset=auto` 或 `fontset=windows` 以获得金样一致的字体和断行。
+- `overleaf` 直接使用 TeX Live 自带的 Fandol/TeX Gyre 字体，跳过字体探测，并通过 `\CJKfamily` 复用已注册字体族，避免同一 OTF 被重复注册。
+- `fastcompile` 跳过 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个论文骨架未使用的宏包；如需其中某个，可在主文件中自行 `\usepackage`。
+
+参考文献方面，发布包随附 `paper-example-bbl.tex`（普通 `.tex` 文件，不会被 Overleaf 上传清理规则移除）。当作业名对应的 `.bbl` 不存在时（Overleaf 免费版默认不运行 Biber），`paper-example.tex` 会自动从该文件加载预编译参考文献，无需手动修改 `latexmkrc` 或运行 Biber 即可显示引用条目。修改 `refs.bib` 或新增引用后，需在本地运行一次 `build.cmd paper-example`（或临时将 `latexmkrc` 中 `$csee_run_biber` 改为 `1`）刷新 `.bbl`。
+
+本地 Windows 用户应将 `fontset` 改为 `auto` 或 `windows` 以获得金样一致的字体和断行。
 
 在 Windows 发布包根目录中，可运行：
 

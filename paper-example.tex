@@ -1,0 +1,101 @@
+% !TEX program = xelatex
+% Copyright 2026 Chen Jiaqi (GitHub: @H15teve)
+% Distributed under LPPL 1.3c or later; maintenance status: maintained.
+% Current Maintainer: Chen Jiaqi (GitHub: @H15teve).
+% This work consists of the files listed in LPPL-MANIFEST.txt.
+% !BIB program = biber
+%==================================================================
+%  paper-example.tex — 中国电机工程学报 真实写作入口
+%  干净骨架,不含 Word 教程内容;供作者写真实论文
+%  编译: build.cmd paper-example，或 xelatex → biber → xelatex ×2
+%==================================================================
+\documentclass[UTF8,twoside,a4paper,fontset=none]{ctexart}
+% auto: Windows 使用原模板字体；macOS/Linux 自动选择兼容字体方案。
+\usepackage[fontset=auto]{csee}
+\usepackage[backend=biber,style=gb7714-2005,gbnamefmt=lowercase]{biblatex}
+\addbibresource{refs.bib}
+\graphicspath{{figures/}}
+
+\cseeheader{中国电机工程学报}{Proceedings of the CSEE}
+
+\begin{document}
+
+%================ 篇首通栏题头 =================
+\begin{cseefrontmatter}
+\cseearticlemeta
+  {10.13334/j.0258-8013.pcsee.XXXXXX}
+  {0258-8013 (2026) XX-XXXX-XX}
+  {TM\,721}
+\cseetitle{中文标题}
+\cseeauthor{作者姓名}
+\cseeaffiliation{（1．作者单位，地址　邮编）}
+\cseetitleEN{English Title}
+\cseeauthorEN{AUTHOR Name}
+\cseeaffiliationEN{(Author Affiliation)}
+\end{cseefrontmatter}
+
+% 在首页左栏开始处登记基金块；模板按实际内容高度预留栏底空间。
+\cseefund
+  {基金项目名称（项目编号示例：XXXXXXXX\cseefundbreak XX）}
+  {Fund project name (Grant No. XXXXXXXX\cseefundbreak XX).}
+
+%================ 双栏正文(ABSTRACT 是闭合后第一段) =================
+\begin{cseeabstractEN}
+English abstract content here.
+\end{cseeabstractEN}
+\cseekeywordsEN{keyword1; keyword2; keyword3}
+
+\begin{cseeabstract}
+中文摘要内容。
+\end{cseeabstract}
+\cseekeywords{关键词1；关键词2；关键词3}
+
+\section{引言}
+直流输电技术在电力系统中的应用日益广泛\cite{ref1,ref7}。本文研究相关内容。
+
+\subsection{研究背景}
+已有研究\cite{ref2,ref4}表明相关方向的重要性。
+
+\subsubsection{三级标题}
+正文内容。
+
+\section{方法}
+正文内容。
+
+\begin{equation}
+\label{eq:1}
+x = \sum_{i=1}^{n} a_i
+\end{equation}
+
+\begin{table}[!ht]
+  \centering
+  \cseetablecaption{表题}{Table caption}\label{tab:1}
+  \cseetabletext
+  \begin{tabular}{cc}
+    \toprule
+    列1 & 列2 \\
+    \midrule
+    数据1 & 数据2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figA1.jpg}
+  \cseefigurecaption{图题}{Figure caption}\label{fig:1}
+\end{figure}
+
+% 在文末结构前排出尚未落版的图表，避免图表越过参考文献。
+\clearpage
+\cseeacknowledgment{致谢内容。}
+
+\printbibliography
+
+%================ 附录 =================
+\cseeappendixhead[A]
+附录内容。
+
+\cseebiography[\#\#\#]{author_photo.jpg}{作者姓名（19XX），性别，学位，职称，主要研究方向；author@example.com。}
+
+\end{document}

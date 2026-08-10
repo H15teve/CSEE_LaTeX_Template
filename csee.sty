@@ -1,0 +1,648 @@
+%%==================================================================%%
+%% Copyright 2026 Chen Jiaqi (GitHub: @H15teve)                     %%
+%% Distributed under LPPL 1.3c or later; status: `maintained'.      %%
+%% Current Maintainer: Chen Jiaqi (GitHub: @H15teve).               %%
+%% This work consists of the files listed in LPPL-MANIFEST.txt.     %%
+%%==================================================================%%
+%%  csee.sty  —  中国电机工程学报 (CSEE)  LaTeX 模板核心样式包        %%
+%%  v0.6.0 (2026-08-10)  附录与作者简介间分割线恢复             %%
+%%                                                                    %%
+%%  使用: \documentclass[UTF8,twoside,a4paper,fontset=none]{ctexart}  %%
+%%        \usepackage[fontset=auto]{csee}                               %%
+%%  编译: xelatex (golden-demo) 或 xelatex→biber→xelatex×2 (paper)    %%
+%%==================================================================%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{csee}[2026/08/10 v0.6.0 CSEE Journal LaTeX template]
+
+%% 字体方案可由包选项锁定；也兼容在加载前定义 \cseefontset。
+%% auto 的探测顺序为 windows -> mac -> noto -> fandol。
+\providecommand{\cseefontset}{auto}
+\DeclareOption{fontset=auto}{\def\cseefontset{auto}}
+\DeclareOption{fontset=windows}{\def\cseefontset{windows}}
+\DeclareOption{fontset=mac}{\def\cseefontset{mac}}
+\DeclareOption{fontset=noto}{\def\cseefontset{noto}}
+\DeclareOption{fontset=fandol}{\def\cseefontset{fandol}}
+\DeclareOption*{\PackageError{csee}{Unknown option `\CurrentOption'}%
+  {Supported font options are fontset=auto, windows, mac, noto, and fandol.}}
+\ProcessOptions\relax
+
+%%------------------------------------------------------------------%%
+%% 0. 依赖                                                           %%
+%%------------------------------------------------------------------%%
+\RequirePackage{iftex}
+\RequirePackage{fontspec}
+\RequirePackage{geometry}
+\RequirePackage{indentfirst}
+\RequirePackage{setspace}
+\RequirePackage{array}
+\RequirePackage{booktabs}
+\RequirePackage{multirow}
+\RequirePackage{tabularx}
+\RequirePackage{makecell}
+\RequirePackage{caption}
+\RequirePackage{graphicx}
+\RequirePackage{amsmath,amssymb}        % newtxmath 兼容 amssymb
+\RequirePackage{siunitx}
+\RequirePackage{xcolor}
+% \degree 自定义(不用 gensymb,避免其 OT1/TimesNewRoman 字体替换警告)
+\providecommand{\degree}{\ensuremath{{}^{\circ}}}
+\RequirePackage{etoolbox}
+\RequirePackage{enumitem}
+\RequirePackage{calc}
+\RequirePackage{url}
+\RequirePackage{fancyhdr}
+\RequirePackage[nospread]{flushend}     % Word 双栏末页自动等高
+
+%%------------------------------------------------------------------%%
+%% 1. 中文字号 → pt 映射 (号制)                                       %%
+%%------------------------------------------------------------------%%
+\newcommand{\csee@chuhao}{42pt}
+\newcommand{\csee@xiaochuhao}{36pt}
+\newcommand{\csee@yihao}{26pt}
+\newcommand{\csee@xiaoyihao}{24pt}
+\newcommand{\csee@erhao}{22pt}
+\newcommand{\csee@xiaoerhao}{18pt}
+\newcommand{\csee@sanhao}{16pt}
+\newcommand{\csee@xiaosanhao}{15pt}
+\newcommand{\csee@sihao}{14pt}
+\newcommand{\csee@xiaosi}{12pt}
+\newcommand{\csee@wuhao}{10.5pt}
+\newcommand{\csee@xiaowu}{9pt}
+\newcommand{\csee@liuhao}{7.5pt}
+\newcommand{\csee@xiaoliu}{6.5pt}
+\newcommand{\csee@qihao}{5.5pt}
+
+%%------------------------------------------------------------------%%
+%% 2. 跨平台字体族注册 (fontset=none 下 ctex 不预定义中文命令)         %%
+%%    设计参考 ThuThesis：自动探测，同时允许显式锁定字体方案。        %%
+%%    windows 用于 Word 金样；mac/noto/fandol 提供可移植的语义映射。  %%
+%%------------------------------------------------------------------%%
+\edef\csee@fontset{\cseefontset}
+
+% Windows 方案需要完整的六种基准字体；否则继续探测可移植方案。
+\newcommand{\csee@select@auto@portable}{%
+  \IfFontExistsTF{Songti SC}{%
+    \IfFontExistsTF{Heiti SC}{%
+      \IfFontExistsTF{STFangsong}{%
+        \IfFontExistsTF{Kaiti SC}{%
+          \IfFontExistsTF{Times New Roman}{%
+            \IfFontExistsTF{Arial}{\def\csee@fontset{mac}}{\csee@select@auto@noto}%
+          }{\csee@select@auto@noto}%
+        }{\csee@select@auto@noto}%
+      }{\csee@select@auto@noto}%
+    }{\csee@select@auto@noto}%
+  }{\csee@select@auto@noto}%
+}
+\newcommand{\csee@select@auto@noto}{%
+  \IfFontExistsTF{Noto Serif CJK SC}{%
+    \IfFontExistsTF{Noto Sans CJK SC}{\def\csee@fontset{noto}}{\def\csee@fontset{fandol}}%
+  }{\def\csee@fontset{fandol}}%
+}
+\newcommand{\csee@select@auto}{%
+  \IfFontExistsTF{SimSun}{%
+    \IfFontExistsTF{SimHei}{%
+      \IfFontExistsTF{FangSong}{%
+        \IfFontExistsTF{KaiTi}{%
+          \IfFontExistsTF{Times New Roman}{%
+            \IfFontExistsTF{Arial}{\def\csee@fontset{windows}}{\csee@select@auto@portable}%
+          }{\csee@select@auto@portable}%
+        }{\csee@select@auto@portable}%
+      }{\csee@select@auto@portable}%
+    }{\csee@select@auto@portable}%
+  }{\csee@select@auto@portable}%
+}
+\ifdefstring{\csee@fontset}{auto}{\csee@select@auto}{}
+
+% 兼容 v0.2/v0.3 的 Windows GB2312 配置。该开关只影响 windows 方案。
+\providecommand{\cseefontprofile}{fallback}
+\@ifundefined{csee@fontprofile}{}{\let\cseefontprofile\csee@fontprofile}
+
+\newcommand{\csee@set@latin@office}{%
+  \setmainfont{Times New Roman}%
+  \setsansfont{Arial}%
+  \setmonofont{Times New Roman}%
+  \newfontfamily\cseetnr{Times New Roman}%
+}
+\newcommand{\csee@set@latin@texgyre}{%
+  \setmainfont{texgyretermes}[
+    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
+    ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
+  \setsansfont{texgyreheros}[
+    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
+    ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
+  \setmonofont{texgyrecursor}[
+    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
+    ItalicFont=*-italic,BoldItalicFont=*-bolditalic,
+    Scale=MatchLowercase,Ligatures=CommonOff]%
+  \newfontfamily\cseetnr{texgyretermes}[
+    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
+    ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
+}
+\newcommand{\csee@set@cjk@windows}{%
+  \setCJKmainfont{SimSun}%
+  \setCJKsansfont{SimHei}%
+  \setCJKmonofont{SimSun}%
+  \newCJKfontfamily\songti{SimSun}%
+  \newCJKfontfamily\cseesongbold{SimSun}[FakeBold=2]%
+  \newCJKfontfamily\heiti{SimHei}%
+  \ifdefstring{\cseefontprofile}{gb2312}{%
+    \newCJKfontfamily\fangsong{FangSong_GB2312}%
+    \newCJKfontfamily\kaishu{KaiTi_GB2312}%
+    \newfontfamily\cseekailatin{KaiTi_GB2312}%
+  }{%
+    \newCJKfontfamily\fangsong{FangSong}%
+    \newCJKfontfamily\kaishu{KaiTi}%
+    \newfontfamily\cseekailatin{KaiTi}%
+  }%
+}
+\newcommand{\csee@set@cjk@mac}{%
+  \defaultCJKfontfeatures{}%
+  \setCJKmainfont{Songti SC}[UprightFont=* Light,BoldFont=* Bold]%
+  \setCJKsansfont{Heiti SC}[UprightFont=* Medium]%
+  \setCJKmonofont{STFangsong}%
+  \newCJKfontfamily\songti{Songti SC}[UprightFont=* Light,BoldFont=* Bold]%
+  \newCJKfontfamily\cseesongbold{Songti SC}[UprightFont=* Bold]%
+  \newCJKfontfamily\heiti{Heiti SC}[UprightFont=* Medium]%
+  \newCJKfontfamily\fangsong{STFangsong}%
+  \newCJKfontfamily\kaishu{Kaiti SC}[UprightFont=* Regular,BoldFont=* Bold]%
+  \newfontfamily\cseekailatin{Kaiti SC}[UprightFont=* Regular,BoldFont=* Bold]%
+}
+\newcommand{\csee@set@cjk@noto}{%
+  \defaultCJKfontfeatures{}%
+  \setCJKmainfont{Noto Serif CJK SC}[Script=CJK,BoldFont=* Bold]%
+  \setCJKsansfont{Noto Sans CJK SC}[Script=CJK]%
+  \setCJKmonofont{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
+  \newCJKfontfamily\songti{Noto Serif CJK SC}[Script=CJK,BoldFont=* Bold]%
+  \newCJKfontfamily\cseesongbold{Noto Serif CJK SC}[
+    Script=CJK,UprightFont=* Bold]%
+  \newCJKfontfamily\heiti{Noto Sans CJK SC}[Script=CJK]%
+  \newCJKfontfamily\fangsong{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
+  \newCJKfontfamily\kaishu{FandolKai}[Extension=.otf,UprightFont=*-Regular]%
+  \newfontfamily\cseekailatin{FandolKai-Regular.otf}%
+}
+\newcommand{\csee@set@cjk@fandol}{%
+  \defaultCJKfontfeatures{}%
+  \setCJKmainfont{FandolSong}[
+    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
+  \setCJKsansfont{FandolHei}[
+    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
+  \setCJKmonofont{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
+  \newCJKfontfamily\songti{FandolSong}[
+    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
+  \newCJKfontfamily\cseesongbold{FandolSong}[
+    Extension=.otf,UprightFont=*-Bold]%
+  \newCJKfontfamily\heiti{FandolHei}[
+    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
+  \newCJKfontfamily\fangsong{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
+  \newCJKfontfamily\kaishu{FandolKai}[Extension=.otf,UprightFont=*-Regular]%
+  \newfontfamily\cseekailatin{FandolKai-Regular.otf}%
+}
+
+\ifdefstring{\csee@fontset}{windows}{%
+  \csee@set@latin@office\csee@set@cjk@windows
+}{\ifdefstring{\csee@fontset}{mac}{%
+  \csee@set@latin@office\csee@set@cjk@mac
+}{\ifdefstring{\csee@fontset}{noto}{%
+  \csee@set@latin@texgyre\csee@set@cjk@noto
+}{\ifdefstring{\csee@fontset}{fandol}{%
+  \csee@set@latin@texgyre\csee@set@cjk@fandol
+}{%
+  \PackageError{csee}{Unknown fontset `\csee@fontset'}%
+    {Use auto, windows, mac, noto, or fandol. Falling back to fandol.}%
+  \def\csee@fontset{fandol}%
+  \csee@set@latin@texgyre\csee@set@cjk@fandol
+}}}}
+\edef\cseeactualfontset{\csee@fontset}
+\PackageInfo{csee}{Requested fontset `\cseefontset'; selected `\cseeactualfontset'}
+
+% 兼容旧别名；楷体说明中的西文/数字由 \cseekailatin 同步切换。
+\newcommand{\song}{\songti}
+\newcommand{\hei}{\heiti}
+\newcommand{\kai}{\kaishu}
+\newcommand{\fs}{\fangsong}
+\urlstyle{same}
+\let\csee@tnr\cseetnr
+\newcommand{\csee@tnrbold}{\cseetnr\bfseries}
+
+% 数学字体保持 Times 兼容；跨平台方案仍使用 newtxmath。
+\RequirePackage{newtxmath}
+
+% 仅 Windows 精确匹配方案需要下列 NFSS 映射。
+\ifdefstring{\csee@fontset}{windows}{%
+  \DeclareFontFamily{OT1}{TimesNewRoman(0)}{}%
+  \DeclareFontShape{OT1}{TimesNewRoman(0)}{m}{n}{<->ssub*ptm/m/n}{}%
+  \DeclareFontShape{OT1}{TimesNewRoman(0)}{m}{it}{<->ssub*ptm/m/it}{}%
+  \DeclareFontShape{OT1}{TimesNewRoman(0)}{m}{sl}{<->ssub*ptm/m/sl}{}%
+  \DeclareFontShape{OT1}{TimesNewRoman(0)}{b}{n}{<->ssub*ptm/b/n}{}%
+  \DeclareFontShape{OT1}{TimesNewRoman(0)}{bx}{n}{<->ssub*ptm/bx/n}{}%
+  \DeclareFontShape{TU}{SimSun(0)}{b}{n}{<->ssub*SimSun(0)/m/n}{}%
+  \DeclareFontShape{TU}{SimSun(0)}{bx}{n}{<->ssub*SimSun(0)/m/n}{}%
+}{%
+  % newtxmath 的少量传统 OT1 文本映射到 Type 1 Times，避免退回 Latin Modern。
+  \DeclareFontFamily{OT1}{texgyretermes(0)}{}%
+  \DeclareFontShape{OT1}{texgyretermes(0)}{m}{n}{<->ssub*ptm/m/n}{}%
+  \DeclareFontShape{OT1}{texgyretermes(0)}{m}{it}{<->ssub*ptm/m/it}{}%
+  \DeclareFontShape{OT1}{texgyretermes(0)}{m}{sl}{<->ssub*ptm/m/sl}{}%
+  \DeclareFontShape{OT1}{texgyretermes(0)}{b}{n}{<->ssub*ptm/b/n}{}%
+  \DeclareFontShape{OT1}{texgyretermes(0)}{bx}{n}{<->ssub*ptm/bx/n}{}%
+}
+
+%%------------------------------------------------------------------%%
+%% 3. 页面设置 (按 OOXML 实测;统一 headheight/headsep/footskip)       %%
+%%    A4,上2.70 下2.00 左2.00 右2.00 cm,栏间距0.78cm                  %%
+%%------------------------------------------------------------------%%
+\geometry{
+  paper=a4paper,
+  top=2.70cm, bottom=2.00cm, left=2.00cm, right=2.00cm,
+  headheight=2.0cm, headsep=0.37cm, footskip=0.8cm,
+  columnsep=0.78cm,
+}
+% Word 的“每页 42 行”是段落网格约束，并不改变上下 2.70/2.00cm 的物理版心。
+% 因此保留 geometry 算得的正文高度；金样中的对象占位由文档局部按网格表达。
+% headheight=2.0cm(56.7pt)+headsep=0.37cm(10.5pt)=67.2pt
+% 普通页content从headheight底+headsep≈67.2+topskip(10)≈77.2(Word普通页77.5);
+% 首页通栏在\twocolumn[...]内,vspace*控制起点84.8;
+% headheight(56.7pt)>fancyhdr单行head要求,无warning
+% headsep=0.37cm 控制普通页页眉至正文距离；footskip=0.8cm 给页脚保留几何空间。
+
+%%------------------------------------------------------------------%%
+%% 4. 字号快捷命令 (固定基线,符合 Word 文档网格)                      %%
+%%    正文 10.5/16.15pt;摘要/关键词/图表题/参考文献/附录 9/14pt;      %%
+%%    表内 7.5/14pt                                                   %%
+%%------------------------------------------------------------------%%
+\renewcommand{\normalsize}{\@setfontsize\normalsize{\csee@wuhao}{16.15pt}}
+\AtBeginDocument{%
+  \normalfont\songti\cseetnr\fontsize{\csee@wuhao}{16.15pt}\selectfont
+  \baselineskip=16.15pt\relax%   显式强制,防 ctex 覆盖为20.995
+  \linespread{1}%
+  \setlength{\parindent}{0.74cm}%
+  \setlength{\parskip}{0pt}%
+  \setlength{\emergencystretch}{3em}% 紧急拉伸消除中英混排轻微Overfull(非\sloppy)
+}
+\newcommand{\chuhao}{\fontsize{\csee@chuhao}{1.2\csee@chuhao}\selectfont}
+\newcommand{\xiaochuhao}{\fontsize{\csee@xiaochuhao}{1.2\csee@xiaochuhao}\selectfont}
+\newcommand{\yihao}{\fontsize{\csee@yihao}{1.2\csee@yihao}\selectfont}
+\newcommand{\xiaoyihao}{\fontsize{\csee@xiaoyihao}{1.2\csee@xiaoyihao}\selectfont}
+\newcommand{\erhao}{\fontsize{\csee@erhao}{36pt}\selectfont}% 22pt字行距36pt(Word实测标题行距)
+\newcommand{\xiaoerhao}{\fontsize{\csee@xiaoerhao}{1.2\csee@xiaoerhao}\selectfont}
+\newcommand{\sanhao}{\fontsize{\csee@sanhao}{1.2\csee@sanhao}\selectfont}
+\newcommand{\xiaosanhao}{\fontsize{\csee@xiaosanhao}{1.2\csee@xiaosanhao}\selectfont}
+\newcommand{\sihao}{\fontsize{\csee@sihao}{1.2\csee@sihao}\selectfont}
+\newcommand{\xiaosi}{\fontsize{\csee@xiaosi}{16.15pt}\selectfont}
+\newcommand{\wuhao}{\fontsize{\csee@wuhao}{16.15pt}\selectfont}
+\newcommand{\xiaowu}{\fontsize{\csee@xiaowu}{14pt}\selectfont}
+\newcommand{\liuhao}{\fontsize{\csee@liuhao}{14pt}\selectfont}
+\newcommand{\xiaoliu}{\fontsize{\csee@xiaoliu}{14pt}\selectfont}
+\newcommand{\qihao}{\fontsize{\csee@qihao}{14pt}\selectfont}
+
+%%------------------------------------------------------------------%%
+%% 5. 标题格式 (用 \ctexset)                                          %%
+%%    1级:小四黑体/Arial,段前后6pt;2级:五号黑体/Arial,段前后0;        %%
+%%    3级:五号宋体/TNR,段前后0                                        %%
+%%    注意:黑体不叠加 \bfseries(SimHei 已是粗笔画,不伪粗)              %%
+%%------------------------------------------------------------------%%
+\ctexset{
+  section = {
+    format     = \sffamily\heiti\xiaosi,
+    name       = {},
+    number     = \arabic{section},
+    aftername  = \quad,
+    beforeskip = 6pt,
+    afterskip  = 6pt,
+    indent     = 0pt,
+    hang       = false,
+  },
+  subsection = {
+    format     = \sffamily\heiti\wuhao,
+    name       = {},
+    number     = \arabic{section}.\arabic{subsection},
+    aftername  = \quad,
+    beforeskip = 0pt,
+    afterskip  = 0pt,
+    indent     = 0pt,
+    hang       = false,
+  },
+  subsubsection = {
+    format     = \songti\wuhao,
+    name       = {},
+    number     = \arabic{section}.\arabic{subsection}.\arabic{subsubsection},
+    aftername  = \quad,
+    beforeskip = 0pt,
+    afterskip  = 0pt,
+    indent     = 0pt,
+    hang       = false,
+  },
+}
+
+%%------------------------------------------------------------------%%
+%% 6. 页眉页脚 (首页 eso-pic 前景层 + fancy 普通页)                    %%
+%%    首页:中文刊名+英文刊名+页码+双线,用 eso-pic shipout 绝对绘制,    %%
+%%    双线在文章编号上方(不占用 fancyhdr 页眉槽,消除 headheight 警告)   %%
+%%    普通页:仅页码,0.75pt单线(样式a3);偶数页:页码+中文刊名            %%
+%%    首页刊名修正原 Word 模板偏移，按 A4 纸张宽度精确居中              %%
+%%------------------------------------------------------------------%%
+\gdef\csee@jnlcn{中国电机工程学报}
+\gdef\csee@jnlen{Proceedings of the CSEE}
+% \cseeheader{中文刊名}{英文刊名} — 保存供首页使用,设置普通页 fancy 样式
+\newcommand{\cseeheader}[2]{%
+  \gdef\csee@jnlcn{#1}\gdef\csee@jnlen{#2}%
+  \pagestyle{fancy}\fancyhf{}%
+  \fancyhead[LE]{\xiaowu\songti\cseetnr\thepage}        % 偶数页:左页码(样式a3单线)
+  \fancyhead[CE]{\xiaowu\songti\ziju{1}\csee@jnlcn}    % 偶数页:中文刊名逐字疏排
+  \fancyhead[RO]{\xiaowu\cseetnr\thepage}               % 普通奇数页:右页码(样式a3单线)
+  \renewcommand{\headrulewidth}{0.75pt}%                 % 普通页单线 0.75pt (样式a3 sz=6)
+  \renewcommand{\footrulewidth}{0pt}%
+  \fancyfoot{}%
+}
+% 首页独立样式:head保留空占位(使\twocolumn通栏起点正常),页眉内容由eso-pic绘制
+\fancypagestyle{csee-first}{%
+  \fancyhf{}%
+  \fancyhead[RO]{\hbox{}}%  空head占位,避免通栏起点上移;页码由eso-pic绘制
+  \fancyfoot{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+}
+% shipout 前景层绘制首页页眉:双线在文章编号上方,不占页眉槽
+% 刊名使用整张纸宽度的居中盒；页码和双线仍保持既有页面锚点。
+% shipout 前景层绘制首页页眉(eso-pic,绝对页面坐标;y从底向上=841.89-顶坐标)
+\RequirePackage{eso-pic}
+\AddToShipoutPictureFG{%
+  \ifnum\value{page}=1
+  \put(0,779.0){\makebox[\paperwidth][c]{\fontsize{9pt}{9.3pt}\selectfont\ziju{1}\xiaowu\songti\csee@jnlcn}}%
+  % Word 中英文两行可见字形间距比旧实现大约 2.9pt；页码与英文行同基线。
+  \put(0,768.29){\makebox[\paperwidth][c]{\fontsize{9pt}{9.3pt}\selectfont\xiaowu\cseetnr\csee@jnlen}}%
+  % picture 参考点补偿 2.015pt，使可见字形右缘与普通奇数页的
+  % x=538.58pt 页边锚点重合。
+  \put(540.595,768.29){\makebox[0pt][r]{\fontsize{9pt}{9.3pt}\selectfont\xiaowu\cseetnr\thepage}}%
+  \put(56.7,764.4){\rule{481.88pt}{0.5pt}}%
+  \put(56.7,763.4){\rule{481.88pt}{0.5pt}}%
+  \fi
+}
+
+%%------------------------------------------------------------------%%
+%% 7. 图表题注 (用 \DeclareCaptionFont 注册 9/14pt)                    %%
+%%    中英文对照:中文行"表 1 …",英文行"Tab. 1 …"                      %%
+%%    两行用 \\ 自然换行,不加额外 2pt                                 %%
+%%------------------------------------------------------------------%%
+\DeclareCaptionFont{cseenine}{\xiaowu}   % 9pt/14pt,已由 \xiaowu 定义
+\captionsetup{
+  font=cseenine,
+  labelformat=empty,
+  labelsep=none,
+  justification=centering,
+  singlelinecheck=false,
+  skip=3pt,
+}
+\captionsetup[table]{position=above,aboveskip=3pt,belowskip=3pt}
+\captionsetup[figure]{position=below,aboveskip=3pt,belowskip=3pt}
+% 表题宏
+\newcommand{\cseetablecaption}[2]{%
+  \caption{\heiti 表\thetable\quad #1\\\cseetnr\bfseries Tab.\thetable\quad #2}%
+}
+% 图题宏
+\newcommand{\cseefigurecaption}[2]{%
+  \caption{\heiti 图~\thefigure\quad #1\\\cseetnr\bfseries Fig.~\thefigure\quad #2}%
+}
+% 非浮动双语图题接口(用于 minipage 内,直接居中段落不用parbox避免双倍宽度)
+\newcommand{\cseefigurecaptionof}[2]{%
+  \par\vspace{3pt}\refstepcounter{figure}%
+  {\centering\heiti 图~\thefigure\quad #1\par\vspace{2pt}\cseetnr\bfseries Fig.~\thefigure\quad #2\par}%
+}
+% 非浮动金样图块：局部化 \centering，避免对后续正文造成状态泄漏。
+\newenvironment{cseefigureblock}{%
+  \par\vspace{3pt}\begingroup\centering
+}{%
+  \par\endgroup\vspace{3pt}%
+}
+
+%%------------------------------------------------------------------%%
+%% 8. 表格三线 (顶底线0.75pt,栏目线0.5pt)                              %%
+%%------------------------------------------------------------------%%
+\setlength{\heavyrulewidth}{0.75pt}
+\setlength{\lightrulewidth}{0.5pt}
+\newcommand{\cseetabletext}{\liuhao\songti\cseetnr\renewcommand{\arraystretch}{0.85}}   % 表内六号/14pt 网格
+% 非浮动不可拆分表格块(金样用,表格严格位于"示例:"后,不浮到正文前)
+\newenvironment{cseetableblock}{%
+  \par\vspace{3pt}\noindent\begin{minipage}{\linewidth}\centering
+}{%
+  \end{minipage}\par\vspace{3pt}%
+}
+
+%%------------------------------------------------------------------%%
+%% 9. 列项与缩进                                                      %%
+%%------------------------------------------------------------------%%
+\renewcommand{\labelenumi}{\theenumi)}
+\setlist[itemize,1]{label=\textbullet}
+
+%%------------------------------------------------------------------%%
+%% 10. 语义命令:标题区(对齐 IEEEtran,方便翻译转换)                    %%
+%%------------------------------------------------------------------%%
+% 篇首通栏环境：统一首页正文起点并自动启用专用首页页眉。
+% 使用方式见 paper-example.tex；环境内只放文章信息、标题、作者和单位。
+\NewDocumentEnvironment{cseefrontmatter}{+b}{%
+  % 实际出版页的篇首信息基线比 Word 教学模板低约 1.3pt。
+  \twocolumn[\vspace*{9.8pt}#1]%
+  \thispagestyle{csee-first}%
+}{}
+\newcommand{\cseearticleinfo}[1]{{\xiaowu\heiti\noindent#1\par}}
+% 正式论文只保留 DOI、文章编号和中图分类号三项，避免调用端重复拼版。
+\newcommand{\cseearticlemeta}[3]{%
+  {\xiaowu\noindent
+   % 实际出版页的两个项目间空白均约 18bp；末项不撑到版心右边界。
+   \hbox{%
+     {\cseetnr\bfseries DOI}{\heiti ：}\cseetnr #1%
+     \hspace{18bp}%
+     {\heiti 文章编号：}\cseetnr #2%
+     \hspace{18bp}%
+     {\heiti 中图分类号：}\cseetnr #3}%
+   \par}%
+}
+% v0.2 的内部命令保留为别名，避免旧文档失效。
+\let\csee@articleinfo\cseearticleinfo
+% Word 原模板中篇首注释块末行的可见字框底边到中文标题顶边相距约
+% 15.20pt。\cseearticlemeta 已结束当前段落，故不再额外加入段前补偿。
+\newcommand{\cseetitle}[1]{\par\vspace{9.2pt}{\centering\heiti\sffamily\fontsize{22pt}{32.4pt}\selectfont #1\par}\vspace{10.7pt}}
+\newcommand{\cseeauthor}[1]{{\centering\fangsong\sihao #1\par}\vspace{6.83pt}}
+\newcommand{\cseeaffiliation}[1]{{\centering\kaishu\wuhao #1\par}\vspace{6pt}}
+% 金样中“空一行，格式同上行”说明行与英文标题的可见字框顶边
+% 相距 31.551pt；单位宏已有段后距，因此这里只额外补足 8.624pt。
+\newcommand{\cseetitleEN}[1]{\vspace{8.624pt}{\centering\cseetnr\xiaosi\bfseries #1\par}}
+\newcommand{\cseeauthorEN}[1]{{\centering\cseetnr\wuhao #1\par}}
+% 金样中最后一行英文作者信息到 ABSTRACT 的可见字框顶边间距为
+% 26.247bp；在双栏切换的既有间距上补足后，段后距取 14.277pt。
+\newcommand{\cseeaffiliationEN}[1]{{\centering\cseetnr\xiaowu #1\par}\vspace{14.277pt}}
+
+%%------------------------------------------------------------------%%
+%% 11. 摘要与关键词                                                    %%
+%%------------------------------------------------------------------%%
+%% 11. 摘要与关键词 (完整局部分组,字号/行距结束后恢复正文10.5/16.15pt)      %%
+%%------------------------------------------------------------------%%
+\newenvironment{cseeabstract}{\par\vspace{6pt}\noindent\begingroup{\xiaowu\heiti 摘\quad 要：}\xiaowu\songti}{\par\endgroup}
+\newcommand{\cseekeywords}[1]{\par\vspace{6pt}\noindent\begingroup{\xiaowu\heiti 关键词：}\xiaowu\songti #1\par\endgroup}
+\newenvironment{cseeabstractEN}{\par\noindent\begingroup{\xiaowu\cseetnr\bfseries ABSTRACT: }\xiaowu\cseetnr}{\par\endgroup}
+\newcommand{\cseekeywordsEN}[1]{\par\vspace{6pt}\noindent\begingroup{\xiaowu\cseetnr\bfseries KEY WORDS: }\xiaowu\cseetnr #1\par\endgroup}
+
+%%------------------------------------------------------------------%%
+%% 12. 基金项目                                                        %%
+%%------------------------------------------------------------------%%
+%% 12. 基金项目（首页左栏底部的流式插入区）                            %%
+%%------------------------------------------------------------------%%
+% 基金编号中的可选断点：不断行时不输出字符，实际断行时在行末输出
+% ASCII 连字符。例：2006CB2003\cseefundbreak 03。
+\newcommand{\cseefundbreak}{\discretionary{-}{}{}}
+% 基金块复用双栏脚注插入机制：TeX 会从当前（首页左侧）栏的正文高度中
+% 扣除基金块实际高度，并把正文续排到右栏，因此内容变化不会与正文重叠。
+% 规则线仍沿用 Word 金样的宽度和线宽；普通脚注也会使用同一规则线。
+\setlength{\skip\footins}{8pt plus 2pt minus 2pt}
+\renewcommand{\footnoterule}{%
+  \kern -3pt
+  \hrule \@width 113.3pt \@height 0.75pt
+  \kern 6pt
+}
+\newcommand{\cseefund}[2]{%
+  \if@twocolumn
+    \if@firstcolumn\else
+      \PackageWarning{csee}{\string\cseefund\space should be called at the
+        start of the first column; placement may move to a later column}%
+    \fi
+  \else
+    \PackageWarning{csee}{\string\cseefund\space is designed for two-column mode}%
+  \fi
+  \begingroup
+    \renewcommand{\thefootnote}{}%
+    \renewcommand{\@makefntext}[1]{\noindent ##1}%
+    \footnotetext{%
+      \begin{minipage}[t]{\columnwidth}
+        \raggedright\fontsize{7.528pt}{12.045pt}\selectfont
+        % 项目名称与编号使用正常字距；编号只在调用端标记的断点换行。
+        \noindent\hspace*{15.056pt}{\heiti 基金项目}\songti ：#1。\par
+        \noindent\hspace*{15.056pt}\cseetnr #2\par
+        % Word 基金文本框底部保留约 13pt 空白；以内容内边距表达，
+        % 不依赖页面坐标，并保持默认短基金块的纵向锚点。
+        \vspace*{13pt}%
+      \end{minipage}%
+    }%
+  \endgroup
+}
+
+%%------------------------------------------------------------------%%
+%% 13. 致谢、附录标题                                                  %%
+%%     致谢标题:10.5pt黑体,段前6pt段后0;正文楷体首行缩进0.74cm        %%
+%%------------------------------------------------------------------%%
+\newcommand{\cseeacknowledgment}[1]{%
+  \par\vspace{6pt}{\centering\heiti\wuhao 致\quad 谢\par}\vspace{0pt}%
+  {\wuhao\kaishu\setlength{\parindent}{0.74cm}#1}\par%
+}
+% 附录标题(仅输出"附录 A",正文由后续提供)
+\newcommand{\cseeappendixhead}[1][A]{\par\vspace{6pt}{\noindent\heiti\wuhao 附录~#1\par}\vspace{6pt}}
+
+%%------------------------------------------------------------------%%
+%% 14. 金样参考文献环境 \cseebibliography (golden-demo 用)             %%
+%%     独立标题段落(不套 \section*),list 参数显式设置各项缩进与间距     %%
+%%     9pt/14pt,悬挂缩进0.63cm                                         %%
+%%------------------------------------------------------------------%%
+\newenvironment{cseebibliography}{%
+  \par\vspace{4pt}%
+  % 独立标题段落:10.5pt 黑体左齐,与 Word 金样一致,不调用 \section*
+  {\wuhao\heiti\noindent 参考文献\par}\vspace{4pt}%
+  \fontsize{9pt}{14pt}\selectfont
+  % Word 格式说明段(独立段落,不产生编号)
+  \noindent\hspace*{2em}参考文献为小五宋，英文字体为Times New Roman，编号后空2小格。行距14pt，悬挂缩进0.63cm，悬挂缩进与首行对齐。标点除括弧为半角外，其余均为全角。\par
+  \noindent\hspace*{2em}根据国家标准GB/T 7714—2005《文后参考文献著录规则》，我刊的参考文献著录格式如下：\par
+  % Word 金样允许首条文献从第2页右栏底部起排，并在第3页左栏续排。
+  % 不对首条使用 Needspace，否则附录及作者简介会整体下移约22mm。
+  \vspace*{14pt}% 首条从下一条14pt文档网格线开始
+  \begin{list}{[\arabic{csee@bibcntr}]}{%
+    \usecounter{csee@bibcntr}%
+    \setlength{\leftmargin}{0.63cm}%    悬挂缩进0.63cm
+    \setlength{\itemindent}{0pt}%
+    \setlength{\labelwidth}{0.55cm}%    [N] 标签宽
+    \setlength{\labelsep}{0.08cm}%
+    \setlength{\itemsep}{0pt}%          条目间距0(Word 参考文献行距14pt紧凑)
+    \setlength{\parsep}{0pt}%
+    \setlength{\topsep}{0pt}%
+  }%
+}{\end{list}}
+\newcounter{csee@bibcntr}
+
+%%------------------------------------------------------------------%%
+%% 15. 作者简介 (拆分:说明文字+照片条目)                                %%
+%%     \cseebiographyintro{说明文字} — 允许跨栏跨页                    %%
+%%     \cseeauthorbio{照片}{个人条目} — 照片+条目绑定,\Needspace保证    %%
+%%------------------------------------------------------------------%%
+\RequirePackage{needspace}
+% Word 原模板在附录与作者简介之间使用 4cm、0.75bp 的短分割线。
+% 纵向间距按 Word 的英文图 A3 图题底边到分割线约 11.07pt 校准；
+% 水平轻微负移用于补偿 Word 分栏左边界与 TeX 栏起点的 0.293bp 差异。
+\newcommand{\cseebiographydivider}{%
+  \par\vspace{-3.584pt}\noindent\hspace*{-0.293bp}\rule{4cm}{0.75bp}\par\vspace{3pt}}
+% 正式稿作者简介标签：在照片右侧绕排块中使用小五黑体。
+\newcommand{\cseebiographylabel}{{\heiti 作者简介：}}
+% 作者简介说明文字(允许跨栏跨页)
+\newcommand{\cseebiographyintro}[1]{\cseebiographydivider{\xiaowu\songti\cseetnr\setlength{\parindent}{0.63cm}#1\par}}
+% 带照片的作者条目(照片与条目绑定,\Needspace确保照片和若干行一起移动)
+\newcommand{\cseeauthorbio}[3][]{%
+  \par\vspace{6pt}%
+  \Needspace{3.1cm}%  照片(2.8cm)+文字物理高度,避免照片和作者条目跨栏拆散
+  \begingroup
+  \xiaowu\songti\cseetnr\setlength{\parindent}{0.63cm}%
+  % 各行先绕开照片；正式接口再分别为标签和信息首行加入 2 字符缩进。
+  \parshape 7 2.30cm \dimexpr\linewidth-2.30cm\relax
+              2.30cm \dimexpr\linewidth-2.30cm\relax
+              2.30cm \dimexpr\linewidth-2.30cm\relax
+              2.30cm \dimexpr\linewidth-2.30cm\relax
+              2.30cm \dimexpr\linewidth-2.30cm\relax
+              2.30cm \dimexpr\linewidth-2.30cm\relax
+              0pt \linewidth
+  \noindent\llap{\smash{\raisebox{\dimexpr\baselineskip-\height\relax}{\includegraphics[width=2.2cm,height=2.8cm]{#2}}}\hspace{0.10cm}}#3\par
+  % 六行绕排不足时补足照片高度，再把姓名置于照片正下方。
+  \ifstrempty{#1}{}{\vspace{34pt}\noindent\makebox[2.2cm][c]{#1}\par}%
+  \endgroup}
+% 简洁写作接口：可选参数排在照片下方；照片右侧第一行是标签，第二行是作者信息。
+\newcommand{\cseebiography}[3][]{%
+  \cseebiographydivider
+  \cseeauthorbio[#1]{#2}{\hspace*{0.63cm}\cseebiographylabel\newline\hspace*{0.63cm}#3}}
+
+% 责任编辑与 Word 教程末尾“总则”块。
+\newcommand{\cseeeditor}[1]{%
+  \par\vspace{6pt}\Needspace{3\baselineskip}%
+  {\fontsize{10.54pt}{16.15pt}\selectfont
+   \hfill{\heiti(责任编辑\quad}{\kaishu #1}{\heiti)}\par}%
+}
+% 金样中的编辑格式说明：五号楷体；仅“编辑”及右引号为黑体；
+% OOXML 标记段前 6pt，换算为 TeX 排版时以 4.8pt 得到相同基线位置。
+\newcommand{\cseeeditornote}[1]{%
+  \par\vspace{4.8pt}\noindent
+  {\xeCJKsetup{PunctStyle=plain}\fontsize{10.54pt}{16.15pt}\selectfont
+   \kaishu\cseekailatin
+   “{\heiti 编辑”}\hspace{10.18pt}#1\par}%
+}
+\newenvironment{cseegeneral}{%
+  \par\vspace{12pt}\begingroup\wuhao\heiti\cseetnr
+  \setlength{\parindent}{0pt}%
+  \noindent\begin{minipage}{\linewidth}% 保持总则完整，末页平衡时整体进入右栏
+}{%
+  \par\end{minipage}\endgroup
+}
+
+% 若写作入口使用 biblatex，统一参考文献标题、字号和条目间距。
+\AtBeginDocument{%
+  \@ifpackageloaded{biblatex}{%
+    % biblatex 的 bibliography list 自带顶部留白；用 -3.235pt 抵消其
+    % 额外 topsep，使标题到首条文献的可见顶边间距与金样 19.216pt 对齐。
+    \defbibheading{bibliography}{\par\vspace{4pt}{\noindent\wuhao\heiti 参考文献\par}\vspace{-3.235pt}}%
+    \renewcommand*{\bibfont}{\xiaowu\songti\cseetnr}%
+    \setlength{\bibitemsep}{0pt}%
+  }{}%
+}
+
+%%------------------------------------------------------------------%%
+%% 16. 超链接(可选,默认不加载;写作入口可用 \usepackage{hyperref})    %%
+%%     golden-demo 不加载 hyperref 以避免 OT1/TimesNewRoman Font      %%
+%%     Warning(fontspec+hyperref 交互);真实论文入口可手动加载         %%
+%%------------------------------------------------------------------%%
+\@ifpackageloaded{hyperref}{}{%
+  % 默认不加载;用户需超链接时在主文件 \usepackage[hidelinks]{hyperref}
+}
+
+\endinput

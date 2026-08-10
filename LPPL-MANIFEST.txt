@@ -1,0 +1,43 @@
+CSEE_TPL LPPL Work Manifest
+===========================
+
+Copyright 2026 Chen Jiaqi (GitHub: @H15teve)
+
+This work may be distributed and/or modified under the conditions of
+the LaTeX Project Public License, either version 1.3c of this license
+or (at your option) any later version.
+
+This work has the LPPL maintenance status `maintained'.
+
+The Current Maintainer of this work is Chen Jiaqi (GitHub: @H15teve).
+Maintenance contact: https://github.com/H15teve
+After the project repository is published, its Issues page should be
+used for bug reports and maintenance requests.
+
+The CSEE_TPL Work consists of these files:
+
+  csee.sty
+  paper-example.tex
+  golden-demo.tex
+  refs.bib
+  build.cmd
+  README.md
+  CHANGELOG.md
+  NOTICE.md
+  LPPL-MANIFEST.txt
+
+The LICENSE file contains the unmodified LPPL 1.3c license text and is
+distributed with the Work.
+
+The following accompanying materials are not part of the LPPL Work:
+
+  - fonts supplied by an operating system, TeX distribution, or third party;
+  - journal names, logos, and material originating from the official Word
+    template or other third-party sources;
+  - images under figures/ unless a file carries its own license notice;
+  - compiled preview PDFs, test baselines, OOXML extracts, and other generated
+    or comparison artifacts.
+
+Only material for which the Copyright Holder owns the necessary rights is
+offered under LPPL 1.3c. See NOTICE.md for additional attribution and rights
+information.

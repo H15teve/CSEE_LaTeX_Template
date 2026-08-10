@@ -17,14 +17,17 @@
 %% 字体方案可由包选项锁定；也兼容在加载前定义 \cseefontset。
 %% auto 的探测顺序为 windows -> mac -> noto -> fandol。
 \providecommand{\cseefontset}{auto}
+\newif\ifcsee@fastcompile
+\csee@fastcompilefalse
 \DeclareOption{fontset=auto}{\def\cseefontset{auto}}
 \DeclareOption{fontset=windows}{\def\cseefontset{windows}}
 \DeclareOption{fontset=mac}{\def\cseefontset{mac}}
 \DeclareOption{fontset=noto}{\def\cseefontset{noto}}
 \DeclareOption{fontset=fandol}{\def\cseefontset{fandol}}
 \DeclareOption{fontset=overleaf}{\def\cseefontset{overleaf}}
+\DeclareOption{fastcompile}{\csee@fastcompiletrue}
 \DeclareOption*{\PackageError{csee}{Unknown option `\CurrentOption'}%
-  {Supported options: fontset=auto, windows, mac, noto, fandol, overleaf.}}
+  {Supported options: fontset=auto/windows/mac/noto/fandol/overleaf, fastcompile.}}
 \ProcessOptions\relax
 
 %%------------------------------------------------------------------%%
@@ -34,16 +37,18 @@
 \RequirePackage{fontspec}
 \RequirePackage{geometry}
 \RequirePackage{indentfirst}
-\RequirePackage{setspace}
 \RequirePackage{array}
 \RequirePackage{booktabs}
-\RequirePackage{multirow}
-\RequirePackage{tabularx}
-\RequirePackage{makecell}
+\ifcsee@fastcompile\else
+  \RequirePackage{setspace}
+  \RequirePackage{multirow}
+  \RequirePackage{tabularx}
+  \RequirePackage{makecell}
+  \RequirePackage{siunitx}
+\fi
 \RequirePackage{caption}
 \RequirePackage{graphicx}
 \RequirePackage{amsmath,amssymb}        % newtxmath 兼容 amssymb
-\RequirePackage{siunitx}
 \RequirePackage{xcolor}
 % \degree 自定义(不用 gensymb,避免其 OT1/TimesNewRoman 字体替换警告)
 \providecommand{\degree}{\ensuremath{{}^{\circ}}}
@@ -124,20 +129,23 @@
   \setmonofont{Times New Roman}%
   \newfontfamily\cseetnr{Times New Roman}%
 }
-\newcommand{\csee@set@latin@texgyre}{%
+\newcommand{\csee@set@latin@texgyre@base}{%
   \setmainfont{texgyretermes}[
     Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
     ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
   \setsansfont{texgyreheros}[
     Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
     ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
+  \newfontfamily\cseetnr{texgyretermes}[
+    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
+    ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
+}
+\newcommand{\csee@set@latin@texgyre}{%
+  \csee@set@latin@texgyre@base
   \setmonofont{texgyrecursor}[
     Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
     ItalicFont=*-italic,BoldItalicFont=*-bolditalic,
     Scale=MatchLowercase,Ligatures=CommonOff]%
-  \newfontfamily\cseetnr{texgyretermes}[
-    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
-    ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
 }
 \newcommand{\csee@set@cjk@windows}{%
   \setCJKmainfont{SimSun}%
@@ -208,7 +216,7 @@
 }{\ifdefstring{\csee@fontset}{fandol}{%
   \csee@set@latin@texgyre\csee@set@cjk@fandol
 }{\ifdefstring{\csee@fontset}{overleaf}{%
-  \csee@set@latin@texgyre\csee@set@cjk@fandol
+  \csee@set@latin@texgyre@base\csee@set@cjk@fandol
 }{%
   \PackageError{csee}{Unknown fontset `\csee@fontset'}%
     {Use auto, windows, mac, noto, fandol, or overleaf. Falling back to fandol.}%

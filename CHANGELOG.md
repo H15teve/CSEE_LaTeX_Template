@@ -13,13 +13,15 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 ### 新增
 
-- 新增 `fontset=overleaf` 选项，与 `fandol` 使用相同的 TeX Live 自带字体，但跳过字体存在性探测，避免 Overleaf 免费版 10 秒编译超时。
-- README 同步更新：Overleaf 免费版用户应手动指定 `fontset=overleaf`；本地 Windows 用户仍使用 `fontset=auto` 或 `fontset=windows`。
+- 新增 `fontset=overleaf` 选项，与 `fandol` 使用相同的 TeX Live 自带字体，但跳过字体存在性探测，并拆分 `\csee@set@latin@texgyre@base` 不注册示例未使用的等宽西文字体（`texgyrecursor`），避免 Overleaf 免费版 10 秒编译超时。
+- 新增 `fastcompile` 选项，启用时不预加载当前论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell` 和 `siunitx`，需要时仍可由论文主文件按需加载。
+- `paper-example.tex` 默认使用 `fontset=overleaf,fastcompile`；Windows 金样仍由 `golden-demo.tex` 的 `fontset=windows` 独立保证。
+- README 同步更新：本地 Windows 用户应改为 `fontset=auto` 或 `fontset=windows` 获得金样一致的字体和断行。
 - 项目正式名称改为 `CSEE_LaTeX_Template`。
 
 ### 修复
 
-- 修复 `fontset=overleaf` 选项的括号不匹配：嵌套 `\ifdefstring` 新增第五层 `overleaf` 分支后补齐缺失的闭合括号，消除 Overleaf 上的 `File ended while scanning use of \@secondoftwo` 错误及后续 `\csee*` 命令的 `Undefined control sequence` 级联报错。
+- 补齐 `fontset=overleaf` 分支缺失的闭合括号，消除 Overleaf 上的 `File ended while scanning use of \@secondoftwo` 错误及后续 `\csee*` 命令的 `Undefined control sequence` 级联报错。
 
 ## v0.6.0 - 2026-08-10
 

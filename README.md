@@ -59,7 +59,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 | `mac` | Songti SC、Heiti SC、STFangsong、Kaiti SC | Times New Roman、Arial | macOS 原生字体环境 |
 | `noto` | Noto Serif/Sans CJK SC；仿宋、楷体使用 Fandol | TeX Gyre Termes、Heros、Cursor | 已安装 Noto CJK 的 Linux/容器环境 |
 | `fandol` | FandolSong、FandolHei、FandolFang、FandolKai | TeX Gyre Termes、Heros、Cursor | 仅依赖完整 TeX Live 的通用回退方案 |
-| `overleaf` | 与 `fandol` 相同 | TeX Gyre Termes、Heros、Cursor | Overleaf 免费版：跳过字体探测，避免 10 秒编译超时 |
+| `overleaf` | 与 `fandol` 相同 | TeX Gyre Termes、Heros（不注册等宽字体） | Overleaf 免费版：跳过字体探测与未用宏包，配合 `fastcompile` 避免 10 秒超时 |
 
 模板本身不附带字体文件。`windows` 是排版验收方案；其他方案保持宋体、黑体、仿宋、楷体等语义角色和字号、行距，但由于字面宽度不同，断行与分页不保证和 Word 金样完全一致。宋体重点字在 Windows 下因 SimSun 没有独立粗体字面而使用 `FakeBold`；macOS 的 Songti SC、Linux 推荐的 Noto Serif CJK SC 和 Fandol 则直接使用各自真实的 Bold 字面，不叠加仿粗。若 `auto` 的结果与预期不符，可在 `.log` 中搜索 `Requested fontset`，或在文档中查看只读宏 `\cseeactualfontset` 的值。
 
@@ -81,13 +81,13 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 ### Overleaf 免费版（10 秒编译限制）
 
-Overleaf 免费版因服务器缺少 Windows/macOS 字体，`fontset=auto` 的字体探测过程会显著增加编译时间，可能导致超时。请在 `paper-example.tex` 中手动指定：
+Overleaf 免费版因服务器缺少 Windows/macOS 字体，`fontset=auto` 的字体探测过程会显著增加编译时间；此外模板默认预加载的若干宏包和等宽西文字体注册在示例论文中并未使用。请在 `paper-example.tex` 中手动指定：
 
 ```tex
-\usepackage[fontset=overleaf]{csee}
+\usepackage[fontset=overleaf,fastcompile]{csee}
 ```
 
-`overleaf` 直接使用 TeX Live 自带的 Fandol/TeX Gyre 字体，不做字体存在性探测，编译时间可控制在 10 秒以内。本地 Windows 用户应恢复为 `fontset=auto` 或 `fontset=windows` 以获得金样一致的字体和断行。
+`overleaf` 直接使用 TeX Live 自带的 Fandol/TeX Gyre 字体且不注册示例未使用的等宽字体；`fastcompile` 跳过 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个宏包的预加载。二者配合可将首次编译控制在 10 秒以内。如需其中某个宏包，可在主文件中自行 `\usepackage`。本地 Windows 用户应恢复为 `fontset=auto` 或 `fontset=windows` 以获得金样一致的字体和断行。
 
 在 Windows 发布包根目录中，可运行：
 
@@ -219,7 +219,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.1 在 v0.6.0 基础上新增 `fontset=overleaf` 选项，经 Overleaf 免费版真实环境测试确认可正常编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
+v0.6.1 在 v0.6.0 基础上新增 `fontset=overleaf` 选项与 `fastcompile` 选项，经 Overleaf 免费版真实环境测试确认 `fontset=overleaf,fastcompile` 组合可在 10 秒内完成首次编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
 
 ## 许可证
 

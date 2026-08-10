@@ -11,7 +11,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 **模板用途：本模板适合先用中文完成电气工程论文，再将内容迁移到 IEEE Transactions 等英文期刊模板。它不是《中国电机工程学报》官方发布的模板，也不能替代投稿前对期刊最新要求的核对。**
 
-当前测试版本：**v0.6.1-rc2**（Overleaf 免费版编译优化候选）。
+当前测试版本：**v0.6.1-rc3**（Overleaf 免费版编译优化候选）。
 
 > **许可证：**本项目的原创模板实现采用 LaTeX Project Public License 1.3c 或更高版本发布，维护状态为 `maintained`。版权人及当前维护者为 Chen Jiaqi（GitHub: `@H15teve`）。准确的授权文件范围见 `LPPL-MANIFEST.txt`；第三方字体、期刊材料、示例图片及编译产物不因此获得授权。
 
@@ -87,11 +87,12 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 1. 将发布包内容直接放在 Overleaf 项目根目录，不要再套一层文件夹。
 2. 主文件选择 `paper-example.tex`，编译器选择 XeLaTeX，TeX Live 版本选择 2025。
 3. 保留根目录中的 `latexmkrc` 和 `paper-example-bbl.tex`；普通 `.tex` 文件不会被 Overleaf 的上传清理规则移除。若你把主文件重命名为 `output.tex` 或其他名称，配置和示例入口会自动使用备用参考文献数据。
-4. 保持论文骨架的 `fontset=overleaf,fastcompile`。如需 `siunitx`、`multirow`、`tabularx`、`makecell` 或 `setspace`，请在主文件中按需加载。如需 Windows 金样字体，应在本地改用 `fontset=windows` 完成最终检查。
+4. 在 Overleaf 免费版首次编译前，将 `latexmkrc` 中的 `$csee_run_biber = 1` 改为 `$csee_run_biber = 0`；付费版不需要修改。
+5. 保持论文骨架的 `fontset=overleaf,fastcompile`。如需 `siunitx`、`multirow`、`tabularx`、`makecell` 或 `setspace`，请在主文件中按需加载。如需 Windows 金样字体，应在本地改用 `fontset=windows` 完成最终检查。
 
 `latexmkrc` 只忽略 `biblatex/logreq` 在排版已经稳定后对 `.run.xml` 中单个状态位的修改，避免一次无视觉变化的 XeLaTeX 重跑；`.aux`、`.bcf`、交叉引用以及其他 XML 内容仍会被检查。本配置不限制最大编译轮数，也不会把未稳定的构建伪装为成功。
 
-为避开免费版首次启动 Biber 的时间开销，`latexmkrc` 默认令 `$csee_run_biber = 0`。当作业名对应的 `.bbl` 不存在时，`paper-example.tex` 会在 `biblatex` 初始化后加载随包提供的 `paper-example-bbl.tex`；因此不依赖 Overleaf 是否保留上传的 `.bbl`。修改正文、公式、图表和已有引用不需要改变该值。修改 `refs.bib` 或新增引用后，可临时将其改成 `1` 编译一次；成功刷新参考文献后再改回 `0`。也可以在本地运行 `build.cmd paper-example`，或交由 GitHub Actions 使用 `CSEE_RUN_BIBER=1` 完成最终构建。
+`latexmkrc` 默认令 `$csee_run_biber = 1`，适用于本地 TeX Live 和 Overleaf 付费版，确保修改 `refs.bib` 后自动刷新参考文献。Overleaf 免费版用户应在首次编译前手动改成 `0`；此时当作业名对应的 `.bbl` 不存在时，`paper-example.tex` 会在 `biblatex` 初始化后加载随包提供的 `paper-example-bbl.tex`，因此不依赖 Overleaf 是否保留上传的 `.bbl`。修改正文、公式、图表和已有引用不需要改变该值。免费版修改 `refs.bib` 或新增引用后，可临时将其改回 `1` 编译一次；成功刷新参考文献后再改回 `0`。也可以在本地运行 `build.cmd paper-example`，或交由 GitHub Actions 使用 `CSEE_RUN_BIBER=1` 完成最终构建。
 
 本地 TeX Live 2025 的免费版预览模式干净项目基准约为 8–9 秒；启用 Biber 的最终模式约为 10–11 秒。实际云端时间取决于 Overleaf 当时的执行节点；若首次编译仍超时，请保留生成文件并再次点击 Recompile，不要立即选择 Recompile from scratch。
 
@@ -225,7 +226,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.1-rc2 已完成 TeX Live 2025 干净项目计时、无 `.bbl` 的备用参考文献源回归、XeLaTeX + Biber 全流程编译、`fontset=overleaf` 字体复用回归，以及优化前后逐页像素对比。`golden-demo.tex` 继续使用 `fontset=windows`，不受 Overleaf 优化影响。该候选版本仍需在 Overleaf 免费版真实环境中确认首次编译时间。
+v0.6.1-rc3 已完成 TeX Live 2025 干净项目计时、无 `.bbl` 的备用参考文献源回归、XeLaTeX + Biber 全流程编译、`fontset=overleaf` 字体复用回归，以及优化前后逐页像素对比。`golden-demo.tex` 继续使用 `fontset=windows`，不受 Overleaf 优化影响。该候选版本仍需在 Overleaf 免费版真实环境中确认首次编译时间。
 
 ## 许可证
 

@@ -9,6 +9,13 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 本项目遵循语义化版本号。日期采用 `YYYY-MM-DD`。
 
+## v0.6.1-rc3 - 2026-08-10
+
+### 编译模式默认值
+
+- `latexmkrc` 默认启用 Biber，保持本地 TeX Live 和 Overleaf 付费版的正常参考文献更新行为。
+- README 明确说明：Overleaf 免费版用户需手动将 `$csee_run_biber` 改为 `0`，再使用 `.tex` 备用参考文献源。
+
 ## v0.6.1-rc2 - 2026-08-10
 
 ### Overleaf 参考文献修复

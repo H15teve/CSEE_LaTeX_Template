@@ -10,11 +10,10 @@
 $hash_calc_ignore_pattern{'xml'} =
   '^\s*<internal package="biblatex" priority="9" active="[01]">';
 
-# Overleaf Free preview mode. Keep this at 0 for normal writing so latexmk
-# reuses the bundled paper-example.bbl and stays below the 10-second limit.
-# Temporarily change it to 1 after editing refs.bib, or set the
-# CSEE_RUN_BIBER=1 environment variable in CI, to refresh the bibliography.
-$csee_run_biber = 0;
+# Full bibliography mode is the default for local TeX Live and Overleaf Paid.
+# Overleaf Free users should change this to 0 before the first compile so the
+# bundled paper-example-bbl.tex fallback stays below the 10-second limit.
+$csee_run_biber = 1;
 $csee_run_biber = 1 if $ENV{'CSEE_RUN_BIBER'};
 $bibtex_use = $csee_run_biber ? 1 : 0;
 

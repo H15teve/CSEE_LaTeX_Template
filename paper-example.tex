@@ -10,8 +10,9 @@
 %  编译: build.cmd paper-example，或 xelatex → biber → xelatex ×2
 %==================================================================
 \documentclass[UTF8,twoside,a4paper,fontset=none]{ctexart}
-% auto: Windows 使用原模板字体；macOS/Linux 自动选择兼容字体方案。
-\usepackage[fontset=auto]{csee}
+% overleaf: 锁定 TeX Live 自带字体并减少重复字体初始化，适合 10 s 免费版。
+% Windows 金样排版可改为 fontset=windows；通用自动探测可改为 fontset=auto。
+\usepackage[fontset=overleaf,fastcompile]{csee}
 \usepackage[backend=biber,style=gb7714-2005,gbnamefmt=lowercase]{biblatex}
 \addbibresource{refs.bib}
 \graphicspath{{figures/}}

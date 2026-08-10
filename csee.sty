@@ -5,25 +5,29 @@
 %% This work consists of the files listed in LPPL-MANIFEST.txt.     %%
 %%==================================================================%%
 %%  csee.sty  —  中国电机工程学报 (CSEE)  LaTeX 模板核心样式包        %%
-%%  v0.6.0 (2026-08-10)  附录与作者简介间分割线恢复             %%
+%%  v0.6.1-rc1 (2026-08-10)  Overleaf 免费版编译优化           %%
 %%                                                                    %%
 %%  使用: \documentclass[UTF8,twoside,a4paper,fontset=none]{ctexart}  %%
 %%        \usepackage[fontset=auto]{csee}                               %%
 %%  编译: xelatex (golden-demo) 或 xelatex→biber→xelatex×2 (paper)    %%
 %%==================================================================%%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{csee}[2026/08/10 v0.6.0 CSEE Journal LaTeX template]
+\ProvidesPackage{csee}[2026/08/10 v0.6.1-rc1 CSEE Journal LaTeX template]
 
 %% 字体方案可由包选项锁定；也兼容在加载前定义 \cseefontset。
 %% auto 的探测顺序为 windows -> mac -> noto -> fandol。
 \providecommand{\cseefontset}{auto}
+\newif\ifcsee@fastcompile
+\csee@fastcompilefalse
 \DeclareOption{fontset=auto}{\def\cseefontset{auto}}
 \DeclareOption{fontset=windows}{\def\cseefontset{windows}}
 \DeclareOption{fontset=mac}{\def\cseefontset{mac}}
 \DeclareOption{fontset=noto}{\def\cseefontset{noto}}
 \DeclareOption{fontset=fandol}{\def\cseefontset{fandol}}
+\DeclareOption{fontset=overleaf}{\def\cseefontset{overleaf}}
+\DeclareOption{fastcompile}{\csee@fastcompiletrue}
 \DeclareOption*{\PackageError{csee}{Unknown option `\CurrentOption'}%
-  {Supported font options are fontset=auto, windows, mac, noto, and fandol.}}
+  {Supported options are fontset=auto/windows/mac/noto/fandol/overleaf and fastcompile.}}
 \ProcessOptions\relax
 
 %%------------------------------------------------------------------%%
@@ -33,16 +37,18 @@
 \RequirePackage{fontspec}
 \RequirePackage{geometry}
 \RequirePackage{indentfirst}
-\RequirePackage{setspace}
 \RequirePackage{array}
 \RequirePackage{booktabs}
-\RequirePackage{multirow}
-\RequirePackage{tabularx}
-\RequirePackage{makecell}
 \RequirePackage{caption}
 \RequirePackage{graphicx}
 \RequirePackage{amsmath,amssymb}        % newtxmath 兼容 amssymb
-\RequirePackage{siunitx}
+\ifcsee@fastcompile\else
+  \RequirePackage{setspace}
+  \RequirePackage{multirow}
+  \RequirePackage{tabularx}
+  \RequirePackage{makecell}
+  \RequirePackage{siunitx}
+\fi
 \RequirePackage{xcolor}
 % \degree 自定义(不用 gensymb,避免其 OT1/TimesNewRoman 字体替换警告)
 \providecommand{\degree}{\ensuremath{{}^{\circ}}}
@@ -123,20 +129,21 @@
   \setmonofont{Times New Roman}%
   \newfontfamily\cseetnr{Times New Roman}%
 }
-\newcommand{\csee@set@latin@texgyre}{%
+\newcommand{\csee@set@latin@texgyre@base}{%
   \setmainfont{texgyretermes}[
     Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
     ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
   \setsansfont{texgyreheros}[
     Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
     ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
+  \newcommand{\cseetnr}{\rmfamily}%
+}
+\newcommand{\csee@set@latin@texgyre}{%
+  \csee@set@latin@texgyre@base
   \setmonofont{texgyrecursor}[
     Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
     ItalicFont=*-italic,BoldItalicFont=*-bolditalic,
     Scale=MatchLowercase,Ligatures=CommonOff]%
-  \newfontfamily\cseetnr{texgyretermes}[
-    Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,
-    ItalicFont=*-italic,BoldItalicFont=*-bolditalic]%
 }
 \newcommand{\csee@set@cjk@windows}{%
   \setCJKmainfont{SimSun}%
@@ -172,10 +179,9 @@
   \setCJKmainfont{Noto Serif CJK SC}[Script=CJK,BoldFont=* Bold]%
   \setCJKsansfont{Noto Sans CJK SC}[Script=CJK]%
   \setCJKmonofont{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
-  \newCJKfontfamily\songti{Noto Serif CJK SC}[Script=CJK,BoldFont=* Bold]%
-  \newCJKfontfamily\cseesongbold{Noto Serif CJK SC}[
-    Script=CJK,UprightFont=* Bold]%
-  \newCJKfontfamily\heiti{Noto Sans CJK SC}[Script=CJK]%
+  \newcommand{\songti}{\CJKfamily{\CJKrmdefault}}%
+  \newcommand{\cseesongbold}{\CJKfamily{\CJKrmdefault}\bfseries}%
+  \newcommand{\heiti}{\CJKfamily{\CJKsfdefault}}%
   \newCJKfontfamily\fangsong{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
   \newCJKfontfamily\kaishu{FandolKai}[Extension=.otf,UprightFont=*-Regular]%
   \newfontfamily\cseekailatin{FandolKai-Regular.otf}%
@@ -187,12 +193,9 @@
   \setCJKsansfont{FandolHei}[
     Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
   \setCJKmonofont{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
-  \newCJKfontfamily\songti{FandolSong}[
-    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
-  \newCJKfontfamily\cseesongbold{FandolSong}[
-    Extension=.otf,UprightFont=*-Bold]%
-  \newCJKfontfamily\heiti{FandolHei}[
-    Extension=.otf,UprightFont=*-Regular,BoldFont=*-Bold]%
+  \newcommand{\songti}{\CJKfamily{\CJKrmdefault}}%
+  \newcommand{\cseesongbold}{\CJKfamily{\CJKrmdefault}\bfseries}%
+  \newcommand{\heiti}{\CJKfamily{\CJKsfdefault}}%
   \newCJKfontfamily\fangsong{FandolFang}[Extension=.otf,UprightFont=*-Regular]%
   \newCJKfontfamily\kaishu{FandolKai}[Extension=.otf,UprightFont=*-Regular]%
   \newfontfamily\cseekailatin{FandolKai-Regular.otf}%
@@ -206,12 +209,14 @@
   \csee@set@latin@texgyre\csee@set@cjk@noto
 }{\ifdefstring{\csee@fontset}{fandol}{%
   \csee@set@latin@texgyre\csee@set@cjk@fandol
+}{\ifdefstring{\csee@fontset}{overleaf}{%
+  \csee@set@latin@texgyre@base\csee@set@cjk@fandol
 }{%
   \PackageError{csee}{Unknown fontset `\csee@fontset'}%
-    {Use auto, windows, mac, noto, or fandol. Falling back to fandol.}%
+    {Use auto, windows, mac, noto, fandol, or overleaf. Falling back to fandol.}%
   \def\csee@fontset{fandol}%
   \csee@set@latin@texgyre\csee@set@cjk@fandol
-}}}}
+}}}}}
 \edef\cseeactualfontset{\csee@fontset}
 \PackageInfo{csee}{Requested fontset `\cseefontset'; selected `\cseeactualfontset'}
 

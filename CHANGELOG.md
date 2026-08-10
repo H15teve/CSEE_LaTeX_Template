@@ -9,6 +9,24 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 本项目遵循语义化版本号。日期采用 `YYYY-MM-DD`。
 
+## v0.6.1-rc1 - 2026-08-10
+
+### Overleaf 兼容性
+
+- 新增 `fontset=overleaf`，锁定 TeX Live 自带的 Fandol/TeX Gyre 字体并省略模板未使用的专用西文等宽字体注册。
+- 新增显式 `fastcompile` 选项；启用时不预加载当前论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell` 和 `siunitx`，需要时仍可由论文主文件按需加载。
+- `paper-example.tex` 默认使用 `fontset=overleaf`；Windows 金样仍由 `golden-demo.tex` 的 `fontset=windows` 独立保证。
+- 复用已经注册的正文、无衬线和中文粗体字体族，避免同一字体在每轮 XeLaTeX 中重复初始化；示例优化前后逐页像素一致。
+- 新增项目级 `latexmkrc`，精确忽略 `biblatex/logreq` 的非排版状态位变化，省去一次无视觉差异的最终 XeLaTeX 重跑，同时继续检查参考文献、交叉引用和其他辅助文件。
+- 随包提供与示例数据同步的 `paper-example.bbl`；Overleaf 免费版默认复用该文件并跳过 Biber，修改参考文献时可通过 `$csee_run_biber` 临时刷新。
+- GitHub Actions 通过 `CSEE_RUN_BIBER=1` 始终执行完整参考文献构建，不以快速预览代替最终验证。
+- GitHub Actions 固定使用 TeX Live 2025，以贴近 Overleaf 免费版环境。
+
+### 性能验证
+
+- 本地 TeX Live 2025 免费版预览模式的干净 `latexmk` 构建约为 8–9 秒；启用 Biber 的最终模式约为 10–11 秒。
+- 未采用限制 `latexmk` 最大轮数的方案；该方案会返回状态 12，并可能掩盖未稳定的交叉引用。
+
 ## v0.6.0 - 2026-08-10
 
 ### 排版修正

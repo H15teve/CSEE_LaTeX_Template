@@ -17,6 +17,10 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 - README 同步更新：Overleaf 免费版用户应手动指定 `fontset=overleaf`；本地 Windows 用户仍使用 `fontset=auto` 或 `fontset=windows`。
 - 项目正式名称改为 `CSEE_LaTeX_Template`。
 
+### 修复
+
+- 修复 `fontset=overleaf` 选项的括号不匹配：嵌套 `\ifdefstring` 新增第五层 `overleaf` 分支后补齐缺失的闭合括号，消除 Overleaf 上的 `File ended while scanning use of \@secondoftwo` 错误及后续 `\csee*` 命令的 `Undefined control sequence` 级联报错。
+
 ## v0.6.0 - 2026-08-10
 
 ### 排版修正

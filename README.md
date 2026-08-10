@@ -5,13 +5,13 @@ Current Maintainer: Chen Jiaqi (GitHub: @H15teve).
 This work consists of the files listed in LPPL-MANIFEST.txt.
 -->
 
-# CSEE_TPL
+# CSEE_LaTeX_Template
 
-`CSEE_TPL` 是《中国电机工程学报》Word 模板的非官方 LaTeX 复刻，目标是在保留中文论文写作便利性的同时，尽量还原标题页、双栏正文、摘要与关键词、基金项目、图表、参考文献、附录和作者简介等版式。
+`CSEE_LaTeX_Template` 是《中国电机工程学报》Word 模板的非官方 LaTeX 复刻，目标是在保留中文论文写作便利性的同时，尽量还原标题页、双栏正文、摘要与关键词、基金项目、图表、参考文献、附录和作者简介等版式。
 
 **模板用途：本模板适合先用中文完成电气工程论文，再将内容迁移到 IEEE Transactions 等英文期刊模板。它不是《中国电机工程学报》官方发布的模板，也不能替代投稿前对期刊最新要求的核对。**
 
-当前发布版本：**v0.6.0**。
+当前发布版本：**v0.6.1**。
 
 > **许可证：**本项目的原创模板实现采用 LaTeX Project Public License 1.3c 或更高版本发布，维护状态为 `maintained`。版权人及当前维护者为 Chen Jiaqi（GitHub: `@H15teve`）。准确的授权文件范围见 `LPPL-MANIFEST.txt`；第三方字体、期刊材料、示例图片及编译产物不因此获得授权。
 
@@ -47,7 +47,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 \usepackage[fontset=auto]{csee}
 ```
 
-`auto` 按 `windows`、`mac`、`noto`、`fandol` 的顺序探测完整字体组，并在日志中输出最终选择。需要保证多台机器选择相同字形时，应显式锁定方案，例如：
+`auto` 按 `windows`、`mac`、`noto`、`fandol` 的顺序探测完整字体组，并在日志中输出最终选择。**Overleaf 免费版用户**应手动指定 `fontset=overleaf` 以避免字体探测耗时引起的编译超时；该方案与 `fandol` 使用相同的 TeX Live 自带字体，但跳过字体存在性检查。需要保证多台机器选择相同字形时，应显式锁定方案，例如：
 
 ```tex
 \usepackage[fontset=fandol]{csee}
@@ -59,6 +59,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 | `mac` | Songti SC、Heiti SC、STFangsong、Kaiti SC | Times New Roman、Arial | macOS 原生字体环境 |
 | `noto` | Noto Serif/Sans CJK SC；仿宋、楷体使用 Fandol | TeX Gyre Termes、Heros、Cursor | 已安装 Noto CJK 的 Linux/容器环境 |
 | `fandol` | FandolSong、FandolHei、FandolFang、FandolKai | TeX Gyre Termes、Heros、Cursor | 仅依赖完整 TeX Live 的通用回退方案 |
+| `overleaf` | 与 `fandol` 相同 | TeX Gyre Termes、Heros、Cursor | Overleaf 免费版：跳过字体探测，避免 10 秒编译超时 |
 
 模板本身不附带字体文件。`windows` 是排版验收方案；其他方案保持宋体、黑体、仿宋、楷体等语义角色和字号、行距，但由于字面宽度不同，断行与分页不保证和 Word 金样完全一致。宋体重点字在 Windows 下因 SimSun 没有独立粗体字面而使用 `FakeBold`；macOS 的 Songti SC、Linux 推荐的 Noto Serif CJK SC 和 Fandol 则直接使用各自真实的 Bold 字面，不叠加仿粗。若 `auto` 的结果与预期不符，可在 `.log` 中搜索 `Requested fontset`，或在文档中查看只读宏 `\cseeactualfontset` 的值。
 
@@ -77,6 +78,16 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 2. 保留 `csee.sty`、`refs.bib` 和 `figures/` 的相对位置。
 3. 替换篇首信息、摘要、正文、图表、参考文献与作者简介。
 4. 使用 XeLaTeX 和 Biber 编译。
+
+### Overleaf 免费版（10 秒编译限制）
+
+Overleaf 免费版因服务器缺少 Windows/macOS 字体，`fontset=auto` 的字体探测过程会显著增加编译时间，可能导致超时。请在 `paper-example.tex` 中手动指定：
+
+```tex
+\usepackage[fontset=overleaf]{csee}
+```
+
+`overleaf` 直接使用 TeX Live 自带的 Fandol/TeX Gyre 字体，不做字体存在性探测，编译时间可控制在 10 秒以内。本地 Windows 用户应恢复为 `fontset=auto` 或 `fontset=windows` 以获得金样一致的字体和断行。
 
 在 Windows 发布包根目录中，可运行：
 
@@ -208,7 +219,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.0 已通过项目自动检查（40 PASS / 0 FAIL）和长基金块流式排版回归（6 PASS / 0 FAIL），完成 `fontset=auto/windows/fandol` 编译检查，并完成 `golden-demo.pdf` 和 `paper-example.pdf` 的逐页视觉验收。`mac` 与 `noto` 方案仍应由发布者在对应字体环境中进行最终编译检查。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
+v0.6.1 在 v0.6.0 基础上新增 `fontset=overleaf` 选项，经 Overleaf 免费版真实环境测试确认可正常编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
 
 ## 许可证
 

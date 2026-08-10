@@ -9,6 +9,14 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 本项目遵循语义化版本号。日期采用 `YYYY-MM-DD`。
 
+## v0.6.1 - 2026-08-11
+
+### 新增
+
+- 新增 `fontset=overleaf` 选项，与 `fandol` 使用相同的 TeX Live 自带字体，但跳过字体存在性探测，避免 Overleaf 免费版 10 秒编译超时。
+- README 同步更新：Overleaf 免费版用户应手动指定 `fontset=overleaf`；本地 Windows 用户仍使用 `fontset=auto` 或 `fontset=windows`。
+- 项目正式名称改为 `CSEE_LaTeX_Template`。
+
 ## v0.6.0 - 2026-08-10
 
 ### 排版修正

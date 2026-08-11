@@ -20,8 +20,9 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 | 文件或目录 | 用途 |
 |---|---|
 | `csee.sty` | 模板核心样式包 |
-| `paper-example.tex` | 推荐复制并改写的论文骨架 |
-| `paper-example-bbl.tex` | 预编译参考文献备用源（Overleaf 免费版无需运行 Biber） |
+| `paper-example.tex` | 推荐复制并改写的论文骨架（biblatex + biber） |
+| `paper-example-overleaf.tex` | Overleaf 免费版编译入口（手写参考文献，不依赖 biber） |
+| `paper-example-bbl.tex` | 预编译参考文献备用源（`paper-example.tex` 在 Overleaf 上无 `.bbl` 时回退使用） |
 | `latexmkrc` | latexmk 编译轮次优化配置 |
 | `refs.bib` | GB/T 7714 参考文献示例数据 |
 | `golden-demo.tex` | 与 Word 模板逐页对照的排版样张源码 |
@@ -83,18 +84,16 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 ### Overleaf 免费版（10 秒编译限制）
 
-Overleaf 免费版因服务器缺少 Windows/macOS 字体、`fontset=auto` 的字体探测耗时显著，且 10 秒内难以完成 Biber 参考文献构建。`paper-example.tex` 已默认采用以下组合适应这一限制：
+Overleaf 免费版自 2025 年 9 月起将编译超时限制为 **10 秒**。`biblatex` + `gb7714-2005` 样式链在 preamble 阶段就需加载多个 `.bbx` 文件，冷缓存下难以在 10 秒内完成。因此为 Overleaf 免费版提供专用入口 `paper-example-overleaf.tex`：
 
-```tex
-\usepackage[fontset=overleaf,fastcompile]{csee}
-```
+- 主文件选择 `paper-example-overleaf.tex`，编译器选 XeLaTeX，TeX Live 2025。
+- 参考文献改用标准 `thebibliography` 环境手写，不加载 `biblatex`，无需运行 Biber；`\cite` 仍可正常引用，只需两次 XeLaTeX 编译（latexmk 会自动处理）。
+- 字体使用 `\usepackage[fontset=overleaf,fastcompile]{csee}`：`overleaf` 锁定 TeX Live 自带的 Fandol/TeX Gyre 字体并跳过字体探测，`fastcompile` 跳过论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个宏包（如需其中某个，可在主文件中自行 `\usepackage`）。
+- 本地冷缓存单遍编译约 2-3 秒，Overleaf 上可在 10 秒内完成单遍编译。
 
-- `overleaf` 直接使用 TeX Live 自带的 Fandol/TeX Gyre 字体，跳过字体探测，并通过 `\CJKfamily` 复用已注册字体族，避免同一 OTF 被重复注册。
-- `fastcompile` 跳过 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个论文骨架未使用的宏包；如需其中某个，可在主文件中自行 `\usepackage`。
+`paper-example.tex`（biblatex 版本）仍保留给本地 TeX Live 和 Overleaf 付费版用户：它随附 `paper-example-bbl.tex`，当 Overleaf 移除上传的 `.bbl` 时由 `\cseebblfallback` 钩子自动加载预编译参考文献。修改 `refs.bib` 或新增引用后，需在本地运行 `build.cmd paper-example` 刷新 `.bbl`。
 
-参考文献方面，发布包随附 `paper-example-bbl.tex`（普通 `.tex` 文件，不会被 Overleaf 上传清理规则移除）。当作业名对应的 `.bbl` 不存在时（Overleaf 免费版默认不运行 Biber），`paper-example.tex` 会自动从该文件加载预编译参考文献，无需手动修改 `latexmkrc` 或运行 Biber 即可显示引用条目。修改 `refs.bib` 或新增引用后，需在本地运行一次 `build.cmd paper-example`（或临时将 `latexmkrc` 中 `$csee_run_biber` 改为 `1`）刷新 `.bbl`。
-
-本地 Windows 用户应将 `fontset` 改为 `auto` 或 `windows` 以获得金样一致的字体和断行。
+本地 Windows 用户应将任一入口的 `fontset` 改为 `auto` 或 `windows` 以获得金样一致的字体和断行。
 
 在 Windows 发布包根目录中，可运行：
 
@@ -226,7 +225,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.1 在 v0.6.0 基础上新增 `fontset=overleaf` 选项与 `fastcompile` 选项，经 Overleaf 免费版真实环境测试确认 `fontset=overleaf,fastcompile` 组合可在 10 秒内完成首次编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
+v0.6.1 在 v0.6.0 基础上新增 Overleaf 免费版支持：`fontset=overleaf` 字体方案、`fastcompile` 宏包精简选项，以及专用入口 `paper-example-overleaf.tex`（用 `thebibliography` 替代 `biblatex`，避免 preamble 阶段加载 gb7714 样式链）。经 Overleaf 免费版真实环境测试，`paper-example-overleaf.tex` 可在 10 秒内完成单遍编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
 
 ## 许可证
 

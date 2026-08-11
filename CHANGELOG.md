@@ -23,7 +23,8 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 - 补齐 `fontset=overleaf` 分支缺失的闭合括号，消除 Overleaf 上的 `File ended while scanning use of \@secondoftwo` 错误及后续 `\csee*` 命令的 `Undefined control sequence` 级联报错。
 - 消除 `fandol`/`overleaf` 方案中的重复字体注册：`\songti`/`\heiti`/`\cseesongbold` 改用 `\CJKfamily{\CJKrmdefault}` 复用 `\setCJKmainfont`/`\setCJKsansfont` 已注册的字体族，`\cseetnr` 改用 `\rmfamily` 复用 `\setmainfont`，避免同一 OTF 字体在每轮 XeLaTeX 中被注册 2-3 次。
-- 恢复 `paper-example-bbl.tex` 预编译参考文献备用源与 `latexmkrc`：Overleaf 免费版在缺少 `.bbl` 时由 `paper-example.tex` 的 `\cseebblfallback` 钩子自动加载，单轮 XeLaTeX 即可显示参考文献，无需运行 Biber。本地验证单轮编译约 3.5 秒，2 页，0 错误，参考文献条目正常渲染。
+- 恢复 `paper-example-bbl.tex` 预编译参考文献备用源与 `latexmkrc`：Overleaf 免费版在缺少 `.bbl` 时由 `paper-example.tex` 的 `\cseebblfallback` 钩子自动加载，单轮 XeLaTeX 即可显示参考文献，无需运行 Biber。
+- 新增 `paper-example-overleaf.tex`：Overleaf 免费版专用编译入口，参考文献改用标准 `thebibliography` 环境手写，完全不加载 `biblatex`，避免 preamble 阶段加载 gb7714 样式链导致 10 秒超时。`\cite` 仍可正常引用，两次 XeLaTeX 编译即可解析。本地冷缓存单遍编译约 2-3 秒。
 
 ## v0.6.0 - 2026-08-10
 

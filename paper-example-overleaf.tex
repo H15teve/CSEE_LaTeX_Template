@@ -21,7 +21,12 @@
 \setcitestyle{super,open={[},close={]}}
 % 参考文献用小五号（9pt）+ 西文 Times 兼容字体，与 biblatex 版和金样一致；
 % natbib 默认 thebibliography 沿用 normalsize（10.5pt），会使长刊名多占行。
-\renewcommand{\bibfont}{\xiaowu\cseetnr}
+% 标题、条目间距、悬挂缩进对齐金样（见 csee.sty 的 cseebibliography 与
+% biblatex 分支的 \defbibheading / \bibfont / \bibitemsep 设置）。
+\renewcommand{\bibfont}{\xiaowu\songti\cseetnr}
+\renewcommand{\bibsection}{\par\vspace{4pt}{\noindent\wuhao\heiti 参考文献\par}\vspace{4pt}}
+\renewcommand{\bibsep}{0pt}
+\renewcommand{\bibhang}{0.63cm}
 \graphicspath{{figures/}}
 
 \cseeheader{中国电机工程学报}{Proceedings of the CSEE}

@@ -24,7 +24,8 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 - 补齐 `fontset=overleaf` 分支缺失的闭合括号，消除 Overleaf 上的 `File ended while scanning use of \@secondoftwo` 错误及后续 `\csee*` 命令的 `Undefined control sequence` 级联报错。
 - 消除 `fandol`/`overleaf` 方案中的重复字体注册：`\songti`/`\heiti`/`\cseesongbold` 改用 `\CJKfamily{\CJKrmdefault}` 复用 `\setCJKmainfont`/`\setCJKsansfont` 已注册的字体族，`\cseetnr` 改用 `\rmfamily` 复用 `\setmainfont`，避免同一 OTF 字体在每轮 XeLaTeX 中被注册 2-3 次。
 - `refs.bib` 头部注释改为 `@comment{...}` 形式并移除圆括号，兼容 BibTeX 的 `.bib` 解析器（BibTeX 不识别 `%` 注释，含 `)` 的行会被误判为条目）。
-- `paper-example-overleaf.tex` 修复 `gbt7714` 废弃选项警告：`super`/`numbers` 在 v2.0+ 中已被 `\bibliographystyle` 接管，改用 `\bibliographystyle{gbt7714-numeric}`。
+- `paper-example-overleaf.tex` 修复 `gbt7714` 废弃选项警告：`super`/`numbers` 在 v2.0+ 中已被 `\bibliographystyle` 接管，改用 `\setcitestyle{super,open={[},close={]}}` 实现上标方括号数字引用。
+- `paper-example-overleaf.tex` 参考文献排版对齐金样与 biblatex 版：`\bibfont{\xiaowu\songti\cseetnr}`（9pt）、`\bibsection`（10.5pt 黑体左对齐标题）、`\bibsep=0`（条目间距）、`\bibhang=0.63cm`（悬挂缩进）。natbib 默认 thebibliography 沿用 normalsize（10.5pt），会使长期刊名多占行。
 
 ### 移除
 

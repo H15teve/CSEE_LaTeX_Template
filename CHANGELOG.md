@@ -26,7 +26,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 - `refs.bib` 头部注释改为 `@comment{...}` 形式并移除圆括号，兼容 BibTeX 的 `.bib` 解析器（BibTeX 不识别 `%` 注释，含 `)` 的行会被误判为条目）。
 - `paper-example-overleaf.tex` 修复 `gbt7714` 废弃选项警告：`super`/`numbers` 在 v2.0+ 中已被 `\bibliographystyle` 接管，改用 `\setcitestyle{super,open={[},close={]}}` 实现上标方括号数字引用。
 - `paper-example-overleaf.tex` 参考文献排版对齐金样与 biblatex 版：`\bibfont{\xiaowu\songti\cseetnr}`（9pt）、`\bibsection`（10.5pt 黑体左对齐标题）、`\bibsep=0`（条目间距）、`\bibhang=0.63cm`（悬挂缩进）。natbib 默认 thebibliography 沿用 normalsize（10.5pt），会使长期刊名多占行。
-- `paper-example-overleaf.tex` 修复参考文献标题与首条文献间距过宽导致的跨栏：natbib 的 numeric 引用模式使用 `\NAT@bibsetnum` 设置列表参数，该命令未清零 `\topsep`，残留 `\@listi` 约 8-10pt 顶部间距。重定义 `\NAT@bibsetnum` 将 `\topsep` 置零，参考文献整体上移，末条不再溢出到右栏。
+- `paper-example-overleaf.tex` 修复参考文献标题与首条文献间距过宽导致的跨栏：natbib 的 numeric 引用模式使用 `\NAT@bibsetnum` 设置列表参数，该命令未清零 `\topsep`，残留 `\@listi` 约 8-10pt 顶部间距。重定义 `\NAT@bibsetnum` 将 `\topsep` 置零，标题到首条文献间距校准为 19pt，末条不再溢出到右栏。
 
 ### 移除
 

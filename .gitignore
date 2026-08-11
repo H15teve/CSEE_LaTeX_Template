@@ -1,0 +1,12 @@
+# LaTeX aux files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.run.xml
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

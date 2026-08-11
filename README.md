@@ -20,9 +20,9 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 | 文件或目录 | 用途 |
 |---|---|
 | `csee.sty` | 模板核心样式包 |
-| `paper-example.tex` | 推荐复制并改写的论文骨架（biblatex + biber） |
+| `paper-example.tex` | 推荐复制并改写的论文骨架（biblatex + biber，本地/付费版） |
 | `paper-example-overleaf.tex` | Overleaf 免费版编译入口（natbib + gbt7714，仍用 `.bib`） |
-| `paper-example-bbl.tex` | 预编译参考文献备用源（`paper-example.tex` 在 Overleaf 上无 `.bbl` 时回退使用） |
+| `latexmkrc` | latexmk 编译轮次优化配置 |
 | `latexmkrc` | latexmk 编译轮次优化配置 |
 | `refs.bib` | GB/T 7714 参考文献示例数据 |
 | `golden-demo.tex` | 与 Word 模板逐页对照的排版样张源码 |
@@ -91,7 +91,7 @@ Overleaf 免费版自 2025 年 9 月起将编译超时限制为 **10 秒**。`bi
 - 字体使用 `\usepackage[fontset=overleaf,fastcompile]{csee}`：`overleaf` 锁定 TeX Live 自带的 Fandol/TeX Gyre 字体并跳过字体探测，`fastcompile` 跳过论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个宏包（如需其中某个，可在主文件中自行 `\usepackage`）。
 - 编译顺序为 `xelatex → bibtex → xelatex ×2`（Overleaf 的 latexmk 会自动处理）。
 
-`paper-example.tex`（biblatex 版本）仍保留给本地 TeX Live 和 Overleaf 付费版用户：它随附 `paper-example-bbl.tex`，当 Overleaf 移除上传的 `.bbl` 时由 `\cseebblfallback` 钩子自动加载预编译参考文献。两个入口共用同一个 `refs.bib`，修改文献数据后只需重新运行各自的编译链。
+`paper-example.tex`（biblatex 版本）面向本地 TeX Live 和 Overleaf 付费版用户，两个入口共用同一个 `refs.bib`，修改文献数据后只需重新运行各自的编译链。
 
 本地 Windows 用户应将任一入口的 `fontset` 改为 `auto` 或 `windows` 以获得金样一致的字体和断行。
 

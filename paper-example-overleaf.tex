@@ -15,9 +15,10 @@
 % 本地 Windows 用户可改为 fontset=windows；通用自动探测可改为 fontset=auto。
 \usepackage[fontset=overleaf]{csee}
 % gbt7714 基于 natbib，preamble 比 biblatex 轻得多；仍用 refs.bib 管理。
-% super/numbers 在 gbt7714 v2.0+ 中已废弃，由 \bibliographystyle 接管。
+% super/numbers 在 gbt7714 v2.0+ 中已废弃，改用 natbib 的 \setcitestyle 设置上标方括号数字引用。
 % sort&compress 由 natbib 提供：合并连续引用，如 \cite{ref1,ref2,ref3} → [1-3]。
 \usepackage[sort&compress]{gbt7714}
+\setcitestyle{super,open={[},close={]}}
 \graphicspath{{figures/}}
 
 \cseeheader{中国电机工程学报}{Proceedings of the CSEE}

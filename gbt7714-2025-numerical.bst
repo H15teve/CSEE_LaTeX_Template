@@ -12,6 +12,11 @@
 %%   upstream package when a future gbt7714 release ships its own
 %%   gbt7714-2025-numerical style.
 %%
+%% Maintenance Status: maintained
+%% Current Maintainer: Chen Jiaqi (GitHub: @H15teve)
+%%   Maintenance of this derived file is handled by the CSEE_LaTeX_Template
+%%   project; the upstream gbt7714 package remains the work of Zeping Lee.
+%%
 %% -------------------------------------------------------------------
 %% GB/T 7714 BibTeX Style (upstream)
 %% https://github.com/zepinglee/gbt7714-bibtex-style

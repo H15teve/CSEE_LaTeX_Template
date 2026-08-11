@@ -23,6 +23,10 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 `figures/` 中的图片仅用于演示模板结构，正式使用时应替换为作者拥有合法使用权的图片和照片。预览 PDF 仅用于排版核验，不应作为投稿稿件。
 
+## 第三方 BibTeX 样式
+
+`gbt7714-2025-numerical.bst` 是 `gbt7714-numerical.bst`（v2.1.5，Copyright (C) 2016--2022 by Zeping Lee）的派生作品。原文件按 LPPL 1.3c 或更高版本发布，版权归 Zeping Lee（https://github.com/zepinglee/gbt7714-bibtex-style）。本项目的唯一修改是将 `uppercase.name` 由 1 改为 0，使英文作者姓仅首字母大写，符合 GB/T 7714-2025；修改说明、维护状态及版权声明见该文件头部，派生关系亦在 `LPPL-MANIFEST.txt` 中注明。
+
 ## 许可证
 
 本项目中由 Chen Jiaqi 创作并有权许可的模板源代码及文档，按 LPPL 1.3c 或更高版本发布，维护状态为 `maintained`。完整条款见 `LICENSE`，构成 Work 的文件见 `LPPL-MANIFEST.txt`。该许可不覆盖期刊名称、标识、原始模板、字体、来源于第三方的图片、编译预览或内部比对材料。

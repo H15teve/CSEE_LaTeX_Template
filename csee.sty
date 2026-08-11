@@ -17,17 +17,14 @@
 %% 字体方案可由包选项锁定；也兼容在加载前定义 \cseefontset。
 %% auto 的探测顺序为 windows -> mac -> noto -> fandol。
 \providecommand{\cseefontset}{auto}
-\newif\ifcsee@fastcompile
-\csee@fastcompilefalse
 \DeclareOption{fontset=auto}{\def\cseefontset{auto}}
 \DeclareOption{fontset=windows}{\def\cseefontset{windows}}
 \DeclareOption{fontset=mac}{\def\cseefontset{mac}}
 \DeclareOption{fontset=noto}{\def\cseefontset{noto}}
 \DeclareOption{fontset=fandol}{\def\cseefontset{fandol}}
 \DeclareOption{fontset=overleaf}{\def\cseefontset{overleaf}}
-\DeclareOption{fastcompile}{\csee@fastcompiletrue}
 \DeclareOption*{\PackageError{csee}{Unknown option `\CurrentOption'}%
-  {Supported options: fontset=auto/windows/mac/noto/fandol/overleaf, fastcompile.}}
+  {Supported options: fontset=auto/windows/mac/noto/fandol/overleaf.}}
 \ProcessOptions\relax
 
 %%------------------------------------------------------------------%%
@@ -39,13 +36,10 @@
 \RequirePackage{indentfirst}
 \RequirePackage{array}
 \RequirePackage{booktabs}
-\ifcsee@fastcompile\else
-  \RequirePackage{setspace}
-  \RequirePackage{multirow}
-  \RequirePackage{tabularx}
-  \RequirePackage{makecell}
-  \RequirePackage{siunitx}
-\fi
+\RequirePackage{setspace}
+\RequirePackage{multirow}
+\RequirePackage{tabularx}
+\RequirePackage{makecell}
 \RequirePackage{caption}
 \RequirePackage{graphicx}
 \RequirePackage{amsmath,amssymb}        % newtxmath 兼容 amssymb

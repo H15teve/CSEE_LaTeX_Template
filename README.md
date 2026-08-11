@@ -62,7 +62,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 | `mac` | Songti SC、Heiti SC、STFangsong、Kaiti SC | Times New Roman、Arial | macOS 原生字体环境 |
 | `noto` | Noto Serif/Sans CJK SC；仿宋、楷体使用 Fandol | TeX Gyre Termes、Heros、Cursor | 已安装 Noto CJK 的 Linux/容器环境 |
 | `fandol` | FandolSong、FandolHei、FandolFang、FandolKai | TeX Gyre Termes、Heros、Cursor | 仅依赖完整 TeX Live 的通用回退方案 |
-| `overleaf` | 与 `fandol` 相同 | TeX Gyre Termes、Heros（不注册等宽字体） | Overleaf 免费版：跳过字体探测与未用宏包，配合 `fastcompile` 避免 10 秒超时 |
+| `overleaf` | 与 `fandol` 相同 | TeX Gyre Termes、Heros（不注册等宽字体） | Overleaf 免费版：跳过字体探测，避免 10 秒超时 |
 
 模板本身不附带字体文件。`windows` 是排版验收方案；其他方案保持宋体、黑体、仿宋、楷体等语义角色和字号、行距，但由于字面宽度不同，断行与分页不保证和 Word 金样完全一致。宋体重点字在 Windows 下因 SimSun 没有独立粗体字面而使用 `FakeBold`；macOS 的 Songti SC、Linux 推荐的 Noto Serif CJK SC 和 Fandol 则直接使用各自真实的 Bold 字面，不叠加仿粗。若 `auto` 的结果与预期不符，可在 `.log` 中搜索 `Requested fontset`，或在文档中查看只读宏 `\cseeactualfontset` 的值。
 
@@ -88,7 +88,8 @@ Overleaf 免费版自 2025 年 9 月起将编译超时限制为 **10 秒**。`bi
 
 - 主文件选择 `paper-example-overleaf.tex`，编译器选 XeLaTeX，TeX Live 2025。
 - 参考文献改用 `natbib` + `gbt7714`（TeX Live 自带），仍通过 `refs.bib` 管理文献、用 BibTeX 编译；`\cite` 自动编号、`sort&compress` 合并连续引用。`natbib` 的 preamble 远轻于 `biblatex`，本地冷缓存单遍编译约 2 秒。
-- 字体使用 `\usepackage[fontset=overleaf,fastcompile]{csee}`：`overleaf` 锁定 TeX Live 自带的 Fandol/TeX Gyre 字体并跳过字体探测，`fastcompile` 跳过论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个宏包（如需其中某个，可在主文件中自行 `\usepackage`）。
+- 字体使用 `\usepackage[fontset=overleaf]{csee}`：`overleaf` 锁定 TeX Live 自带的 Fandol/TeX Gyre 字体并跳过字体探测，可在 10 秒内完成编译。
+- 参考文献选项 `sort&compress` 由 `natbib` 提供，作用是将多个连续引用合并为区间格式，如 `\cite{ref1,ref2,ref3}` → `[1-3]`。
 - 编译顺序为 `xelatex → bibtex → xelatex ×2`（Overleaf 的 latexmk 会自动处理）。
 
 `paper-example.tex`（biblatex 版本）面向本地 TeX Live 和 Overleaf 付费版用户，两个入口共用同一个 `refs.bib`，修改文献数据后只需重新运行各自的编译链。

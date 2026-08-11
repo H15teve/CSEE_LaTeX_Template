@@ -14,18 +14,22 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 ### 新增
 
 - 新增 `fontset=overleaf` 选项，与 `fandol` 使用相同的 TeX Live 自带字体，但跳过字体存在性探测，并拆分 `\csee@set@latin@texgyre@base` 不注册示例未使用的等宽西文字体（`texgyrecursor`），避免 Overleaf 免费版 10 秒编译超时。
-- 新增 `fastcompile` 选项，启用时不预加载当前论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell` 和 `siunitx`，需要时仍可由论文主文件按需加载。
-- `paper-example.tex` 默认使用 `fontset=overleaf,fastcompile`；Windows 金样仍由 `golden-demo.tex` 的 `fontset=windows` 独立保证。
-- README 同步更新：本地 Windows 用户应改为 `fontset=auto` 或 `fontset=windows` 获得金样一致的字体和断行。
+- 新增 `paper-example-overleaf.tex`：Overleaf 免费版专用编译入口，参考文献改用 `natbib` + `gbt7714`（TeX Live 自带），仍通过 `refs.bib` 管理文献、用 BibTeX 编译，不加载 `biblatex`，避免 preamble 阶段加载 gb7714 样式链导致 10 秒超时。`\cite` 自动编号并支持 `sort&compress` 合并连续引用。
+- `paper-example.tex` 恢复默认 `fontset=auto`（不再默认 `fontset=overleaf`），因 Overleaf 免费版用户已分流到 `paper-example-overleaf.tex`。
 - 项目正式名称改为 `CSEE_LaTeX_Template`。
 
 ### 修复
 
 - 补齐 `fontset=overleaf` 分支缺失的闭合括号，消除 Overleaf 上的 `File ended while scanning use of \@secondoftwo` 错误及后续 `\csee*` 命令的 `Undefined control sequence` 级联报错。
 - 消除 `fandol`/`overleaf` 方案中的重复字体注册：`\songti`/`\heiti`/`\cseesongbold` 改用 `\CJKfamily{\CJKrmdefault}` 复用 `\setCJKmainfont`/`\setCJKsansfont` 已注册的字体族，`\cseetnr` 改用 `\rmfamily` 复用 `\setmainfont`，避免同一 OTF 字体在每轮 XeLaTeX 中被注册 2-3 次。
-- 恢复 `paper-example-bbl.tex` 预编译参考文献备用源与 `latexmkrc`...
-- 新增 `paper-example-overleaf.tex`：Overleaf 免费版专用编译入口，参考文献改用 `natbib` + `gbt7714`（TeX Live 自带），仍通过 `refs.bib` 管理文献、用 BibTeX 编译，不加载 `biblatex`，避免 preamble 阶段加载 gb7714 样式链导致 10 秒超时。`\cite` 自动编号并支持 `sort&compress` 合并连续引用；本地冷缓存单遍编译约 2 秒。
 - `refs.bib` 头部注释改为 `@comment{...}` 形式并移除圆括号，兼容 BibTeX 的 `.bib` 解析器（BibTeX 不识别 `%` 注释，含 `)` 的行会被误判为条目）。
+- `paper-example-overleaf.tex` 修复 `gbt7714` 废弃选项警告：`super`/`numbers` 在 v2.0+ 中已被 `\bibliographystyle` 接管，改用 `\bibliographystyle{gbt7714-numeric}`。
+
+### 移除
+
+- 移除 `paper-example-bbl.tex` 和 `paper-example.tex` 中的 `\cseebblfallback` 钩子：该机制原为让 Overleaf 免费版上的 biblatex 版跳过 Biber，但 biblatex 的 preamble 加载 `.bbx` 样式链本身就超时，bbl 兜底在 `\begin{document}` 才触发，来不及挽救。
+- 移除 `fastcompile` 选项（rc 迭代中引入但从未正式发布，实测 Overleaf 免费版无需该选项也能编译）。
+- `latexmkrc` 同步精简，移除已失效的 `$csee_run_biber` 和作业名别名逻辑。
 
 ## v0.6.0 - 2026-08-10
 

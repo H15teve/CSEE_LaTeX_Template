@@ -15,6 +15,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 - 新增 `fontset=overleaf` 选项，与 `fandol` 使用相同的 TeX Live 自带字体，但跳过字体存在性探测，并拆分 `\csee@set@latin@texgyre@base` 不注册示例未使用的等宽西文字体（`texgyrecursor`），避免 Overleaf 免费版 10 秒编译超时。
 - 新增 `paper-example-overleaf.tex`：Overleaf 免费版专用编译入口，参考文献改用 `natbib` + `gbt7714`（TeX Live 自带），仍通过 `refs.bib` 管理文献、用 BibTeX 编译，不加载 `biblatex`，避免 preamble 阶段加载 gb7714 样式链导致 10 秒超时。`\cite` 自动编号并支持 `sort&compress` 合并连续引用。
+- 新增 `gbt7714-2025-numerical.bst`：派生自 `gbt7714-numerical.bst` v2.1.5（LPPL 1.3c，作者 Zeping Lee），将 `uppercase.name` 改为 0，使作者英文姓首字母大写（符合 GB/T 7714-2025，与 `biblatex-gb7714-2015` 和金样一致）。
 - `paper-example.tex` 恢复默认 `fontset=auto`（不再默认 `fontset=overleaf`），因 Overleaf 免费版用户已分流到 `paper-example-overleaf.tex`。
 - 项目正式名称改为 `CSEE_LaTeX_Template`。
 

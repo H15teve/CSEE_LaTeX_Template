@@ -22,6 +22,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 | `csee.sty` | 模板核心样式包 |
 | `paper-example.tex` | 推荐复制并改写的论文骨架（biblatex + biber，本地/付费版） |
 | `paper-example-overleaf.tex` | Overleaf 免费版编译入口（natbib + gbt7714，仍用 `.bib`） |
+| `gbt7714-2025-numerical.bst` | 派生 BibTeX 样式：作者姓首字母大写，符合 GB/T 7714-2025 |
 | `latexmkrc` | latexmk 编译轮次优化配置 |
 | `latexmkrc` | latexmk 编译轮次优化配置 |
 | `refs.bib` | GB/T 7714 参考文献示例数据 |

@@ -18,13 +18,22 @@ The CSEE_TPL Work consists of these files:
 
   csee.sty
   paper-example.tex
+  paper-example-overleaf.tex
+  gbt7714-2025-numerical.bst
   golden-demo.tex
   refs.bib
   build.cmd
+  latexmkrc
   README.md
   CHANGELOG.md
   NOTICE.md
   LPPL-MANIFEST.txt
+
+Note: gbt7714-2025-numerical.bst is a derived work from
+gbt7714-numerical.bst (v2.1.5) by Zeping Lee, distributed under LPPL 1.3c.
+The sole modification is uppercase.name := #0 (author family names
+rendered with initial capital only, per GB/T 7714-2025). The file header
+documents this change.
 
 The LICENSE file contains the unmodified LPPL 1.3c license text and is
 distributed with the Work.

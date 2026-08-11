@@ -5,13 +5,16 @@
 % This work consists of the files listed in LPPL-MANIFEST.txt.
 %==================================================================
 %  paper-example-overleaf.tex — Overleaf 免费版（10 秒）编译入口
-%  与 paper-example.tex 内容相同，但参考文献改用标准 thebibliography
-%  环境，不加载 biblatex，避免 preamble 阶段加载 gb7714 样式链超时。
-%  真实写作请使用 paper-example.tex（biblatex + biber）。
+%  与 paper-example.tex 内容相同，但参考文献改用 natbib + gbt7714
+%  （传统 BibTeX 工作流），不加载 biblatex，避免 preamble 阶段加载
+%  gb7714 样式链超时。仍用 refs.bib 管理参考文献，bibtex 编译。
+%  真实写作也可用 paper-example.tex（biblatex + biber）。
 %==================================================================
 \documentclass[UTF8,twoside,a4paper,fontset=none]{ctexart}
 % overleaf: 锁定 TeX Live 自带字体并跳过非必要宏包，适合 Overleaf 免费版 10 s 限制。
 \usepackage[fontset=overleaf,fastcompile]{csee}
+% gbt7714 基于 natbib，preamble 比 biblatex 轻得多；仍用 refs.bib 管理。
+\usepackage[numbers,super,sort&compress]{gbt7714}
 \graphicspath{{figures/}}
 
 \cseeheader{中国电机工程学报}{Proceedings of the CSEE}
@@ -88,14 +91,8 @@ x = \sum_{i=1}^{n} a_i
 \clearpage
 \cseeacknowledgment{致谢内容。}
 
-%================ 参考文献（手写 thebibliography，不依赖 biber）=================
-\renewcommand{\refname}{参考文献}
-\begin{thebibliography}{99}
-\bibitem{ref1} 葛俊，童陆园，耿俊成，等．TCSC暂态过程中晶闸管导通角特性的研究[J]．电网技术，2001，25(7)：18-22．
-\bibitem{ref2} 张贤达．现代信号处理[M]．北京：清华大学出版社，2002：179-193．
-\bibitem{ref4} Anderson P M，Agrawal B L，Van Ness J E．Subsynchronous Resonance in Power Systems[M]．New York：IEEE Press，1990：35-68．
-\bibitem{ref7} Sharma C．Modeling of an island grid[J]．IEEE Transactions on Power Systems，1998，13(3)：971-978．
-\end{thebibliography}
+%================ 参考文献（natbib + gbt7714，用 refs.bib 管理，bibtex 编译）=================
+\bibliography{refs}
 
 %================ 附录 =================
 \cseeappendixhead[A]

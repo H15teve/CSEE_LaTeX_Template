@@ -21,7 +21,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 |---|---|
 | `csee.sty` | 模板核心样式包 |
 | `paper-example.tex` | 推荐复制并改写的论文骨架（biblatex + biber） |
-| `paper-example-overleaf.tex` | Overleaf 免费版编译入口（手写参考文献，不依赖 biber） |
+| `paper-example-overleaf.tex` | Overleaf 免费版编译入口（natbib + gbt7714，仍用 `.bib`） |
 | `paper-example-bbl.tex` | 预编译参考文献备用源（`paper-example.tex` 在 Overleaf 上无 `.bbl` 时回退使用） |
 | `latexmkrc` | latexmk 编译轮次优化配置 |
 | `refs.bib` | GB/T 7714 参考文献示例数据 |
@@ -84,14 +84,14 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 ### Overleaf 免费版（10 秒编译限制）
 
-Overleaf 免费版自 2025 年 9 月起将编译超时限制为 **10 秒**。`biblatex` + `gb7714-2005` 样式链在 preamble 阶段就需加载多个 `.bbx` 文件，冷缓存下难以在 10 秒内完成。因此为 Overleaf 免费版提供专用入口 `paper-example-overleaf.tex`：
+Overleaf 免费版自 2025 年 9 月起将编译超时限制为 **10 秒**。`biblatex` 在 preamble 阶段需加载完整的 gb7714 `.bbx` 样式链，冷缓存下难以在 10 秒内完成。因此为 Overleaf 免费版提供专用入口 `paper-example-overleaf.tex`：
 
 - 主文件选择 `paper-example-overleaf.tex`，编译器选 XeLaTeX，TeX Live 2025。
-- 参考文献改用标准 `thebibliography` 环境手写，不加载 `biblatex`，无需运行 Biber；`\cite` 仍可正常引用，只需两次 XeLaTeX 编译（latexmk 会自动处理）。
+- 参考文献改用 `natbib` + `gbt7714`（TeX Live 自带），仍通过 `refs.bib` 管理文献、用 BibTeX 编译；`\cite` 自动编号、`sort&compress` 合并连续引用。`natbib` 的 preamble 远轻于 `biblatex`，本地冷缓存单遍编译约 2 秒。
 - 字体使用 `\usepackage[fontset=overleaf,fastcompile]{csee}`：`overleaf` 锁定 TeX Live 自带的 Fandol/TeX Gyre 字体并跳过字体探测，`fastcompile` 跳过论文骨架未使用的 `setspace`、`multirow`、`tabularx`、`makecell`、`siunitx` 五个宏包（如需其中某个，可在主文件中自行 `\usepackage`）。
-- 本地冷缓存单遍编译约 2-3 秒，Overleaf 上可在 10 秒内完成单遍编译。
+- 编译顺序为 `xelatex → bibtex → xelatex ×2`（Overleaf 的 latexmk 会自动处理）。
 
-`paper-example.tex`（biblatex 版本）仍保留给本地 TeX Live 和 Overleaf 付费版用户：它随附 `paper-example-bbl.tex`，当 Overleaf 移除上传的 `.bbl` 时由 `\cseebblfallback` 钩子自动加载预编译参考文献。修改 `refs.bib` 或新增引用后，需在本地运行 `build.cmd paper-example` 刷新 `.bbl`。
+`paper-example.tex`（biblatex 版本）仍保留给本地 TeX Live 和 Overleaf 付费版用户：它随附 `paper-example-bbl.tex`，当 Overleaf 移除上传的 `.bbl` 时由 `\cseebblfallback` 钩子自动加载预编译参考文献。两个入口共用同一个 `refs.bib`，修改文献数据后只需重新运行各自的编译链。
 
 本地 Windows 用户应将任一入口的 `fontset` 改为 `auto` 或 `windows` 以获得金样一致的字体和断行。
 

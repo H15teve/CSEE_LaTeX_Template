@@ -226,7 +226,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.1 在 v0.6.0 基础上新增 Overleaf 免费版支持：`fontset=overleaf` 字体方案、`fastcompile` 宏包精简选项，以及专用入口 `paper-example-overleaf.tex`（用 `thebibliography` 替代 `biblatex`，避免 preamble 阶段加载 gb7714 样式链）。经 Overleaf 免费版真实环境测试，`paper-example-overleaf.tex` 可在 10 秒内完成单遍编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
+v0.6.1 在 v0.6.0 基础上新增 Overleaf 免费版支持：`fontset=overleaf` 字体方案，以及专用入口 `paper-example-overleaf.tex`（用 `natbib`+`gbt7714` 替代 `biblatex`，避免 preamble 阶段加载 gb7714 样式链）。经 Overleaf 免费版真实环境测试，`paper-example-overleaf.tex` 可在 10 秒内完成编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
 
 ## 许可证
 

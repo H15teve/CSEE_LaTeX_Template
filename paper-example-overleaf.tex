@@ -19,6 +19,9 @@
 % sort&compress 由 natbib 提供：合并连续引用，如 \cite{ref1,ref2,ref3} → [1-3]。
 \usepackage[sort&compress]{gbt7714}
 \setcitestyle{super,open={[},close={]}}
+% 参考文献用小五号（9pt）+ 西文 Times 兼容字体，与 biblatex 版和金样一致；
+% natbib 默认 thebibliography 沿用 normalsize（10.5pt），会使长刊名多占行。
+\renewcommand{\bibfont}{\xiaowu\cseetnr}
 \graphicspath{{figures/}}
 
 \cseeheader{中国电机工程学报}{Proceedings of the CSEE}

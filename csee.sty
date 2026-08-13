@@ -5,14 +5,14 @@
 %% This work consists of the files listed in LPPL-MANIFEST.txt.     %%
 %%==================================================================%%
 %%  csee.sty  —  中国电机工程学报 (CSEE)  LaTeX 模板核心样式包        %%
-%%  v0.6.1 (2026-08-11)  新增 fontset=overleaf 选项             %%
+%%  v0.6.2 (2026-08-13)  修复长作者简介与照片姓名间距       %%
 %%                                                                    %%
 %%  使用: \documentclass[UTF8,twoside,a4paper,fontset=none]{ctexart}  %%
 %%        \usepackage[fontset=auto]{csee}                               %%
 %%  编译: xelatex (golden-demo) 或 xelatex→biber→xelatex×2 (paper)    %%
 %%==================================================================%%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{csee}[2026/08/11 v0.6.1 CSEE Journal LaTeX template]
+\ProvidesPackage{csee}[2026/08/13 v0.6.2 CSEE Journal LaTeX template]
 
 %% 字体方案可由包选项锁定；也兼容在加载前定义 \cseefontset。
 %% auto 的探测顺序为 windows -> mac -> noto -> fandol。
@@ -580,23 +580,21 @@
 \newcommand{\cseebiographylabel}{{\heiti 作者简介：}}
 % 作者简介说明文字(允许跨栏跨页)
 \newcommand{\cseebiographyintro}[1]{\cseebiographydivider{\xiaowu\songti\cseetnr\setlength{\parindent}{0.63cm}#1\par}}
-% 带照片的作者条目(照片与条目绑定,\Needspace确保照片和若干行一起移动)
+% 带照片的作者条目：左侧照片/姓名栏与右侧简介栏独立排版，
+% 避免长简介在照片下方恢复整栏宽度；姓名紧贴照片底部。
 \newcommand{\cseeauthorbio}[3][]{%
   \par\vspace{6pt}%
-  \Needspace{3.1cm}%  照片(2.8cm)+文字物理高度,避免照片和作者条目跨栏拆散
+  \Needspace{3.1cm}%  照片(2.8cm)+文字物理高度，避免作者条目跨栏拆散
   \begingroup
-  \xiaowu\songti\cseetnr\setlength{\parindent}{0.63cm}%
-  % 各行先绕开照片；正式接口再分别为标签和信息首行加入 2 字符缩进。
-  \parshape 7 2.30cm \dimexpr\linewidth-2.30cm\relax
-              2.30cm \dimexpr\linewidth-2.30cm\relax
-              2.30cm \dimexpr\linewidth-2.30cm\relax
-              2.30cm \dimexpr\linewidth-2.30cm\relax
-              2.30cm \dimexpr\linewidth-2.30cm\relax
-              2.30cm \dimexpr\linewidth-2.30cm\relax
-              0pt \linewidth
-  \noindent\llap{\smash{\raisebox{\dimexpr\baselineskip-\height\relax}{\includegraphics[width=2.2cm,height=2.8cm]{#2}}}\hspace{0.10cm}}#3\par
-  % 六行绕排不足时补足照片高度，再把姓名置于照片正下方。
-  \ifstrempty{#1}{}{\vspace{34pt}\noindent\makebox[2.2cm][c]{#1}\par}%
+  \xiaowu\songti\cseetnr
+  \noindent\begin{minipage}[t]{2.2cm}%
+    \vspace{0pt}\centering
+    \includegraphics[width=2.2cm,height=2.8cm]{#2}\par
+    \ifstrempty{#1}{}{\vspace{1pt}\makebox[2.2cm][c]{#1}\par}%
+  \end{minipage}\hspace{0.10cm}%
+  \begin{minipage}[t]{\dimexpr\linewidth-2.30cm\relax}%
+    \vspace{0pt}#3\par
+  \end{minipage}\par
   \endgroup}
 % 简洁写作接口：可选参数排在照片下方；照片右侧第一行是标签，第二行是作者信息。
 \newcommand{\cseebiography}[3][]{%

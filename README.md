@@ -11,7 +11,7 @@ This work consists of the files listed in LPPL-MANIFEST.txt.
 
 **模板用途：本模板适合先用中文完成电气工程论文，再将内容迁移到 IEEE Transactions 等英文期刊模板。它不是《中国电机工程学报》官方发布的模板，也不能替代投稿前对期刊最新要求的核对。**
 
-当前发布版本：**v0.6.1**。
+当前发布版本：**v0.6.2**。
 
 > **许可证：**本项目的原创模板实现采用 LaTeX Project Public License 1.3c 或更高版本发布，维护状态为 `maintained`。版权人及当前维护者为 Chen Jiaqi（GitHub: `@H15teve`）。准确的授权文件范围见 `LPPL-MANIFEST.txt`；第三方字体、期刊材料、示例图片及编译产物不因此获得授权。
 
@@ -226,7 +226,7 @@ English abstract.
 
 ## 验证状态
 
-v0.6.1 在 v0.6.0 基础上新增 Overleaf 免费版支持：`fontset=overleaf` 字体方案，以及专用入口 `paper-example-overleaf.tex`（用 `natbib`+`gbt7714` 替代 `biblatex`，避免 preamble 阶段加载 gb7714 样式链）。经 Overleaf 免费版真实环境测试，`paper-example-overleaf.tex` 可在 10 秒内完成编译。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
+v0.6.2 在 v0.6.1 基础上修复作者介绍排版：作者介绍始终保持在照片右侧，姓名紧贴照片下方，不会因介绍较长而流入照片下方区域。Overleaf 免费版专用入口 `paper-example-overleaf.tex` 与普通入口均适用。`golden-demo.tex` 继续使用 `fontset=windows`，不受影响。预览 PDF 仅用于确认安装与排版，不应直接作为投稿稿件。
 
 ## 许可证
 
